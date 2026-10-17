@@ -16,15 +16,19 @@ Devlympics Shunya 2026 · PS: **Bridge the Gap**
 | `/doctor.html` Doctor | Triage, human check of unsure rows, outbreak alarm, one-tap Hindi voice instruction |
 
 ## Run
-```powershell
-cd paperbridge
-$env:GEMINI_API_KEY="your_key"   # optional, from https://aistudio.google.com/apikey
-node server.js
-```
-- Laptop: `http://localhost:3000` (Command Center)
-- Phone (same WiFi/hotspot): the `/field.html` URL printed in the console
+Double-click **`run.bat`** (or `node server.js`). No npm install, Node 18+ only.
+- Laptop / projector: `http://localhost:3000/bridge.html`
+- ASHA phone (same Wi-Fi or hotspot): the **`https://<laptop-ip>:3443/field.html`** URL printed in the console. Tap *Advanced → Proceed* once (self-signed certificate). HTTPS is what lets the phone use the **mic, offline install and vibration**.
+- On the phone, tap **📲 Install Kaagaz**: it then opens from the home screen, even with zero signal.
+- Data survives restarts (`data/`). *Start over* on the doctor page clears it.
+- Live mode: put a Gemini key in `key.txt` (git-ignored). Without one, demo mode uses two photo-realistic sample pages whose boxes were measured, not guessed.
 
-No key or no internet: **demo mode** with two scripted sample pages. If Gemini fails mid-demo, it falls back automatically.
+## Verify before going on stage
+```
+node tools/e2e.js     # real headless browser runs the whole loop: 14 checks + screenshots in e2e-shots/
+node tools/eval.js    # (live mode) Gemini accuracy on your own handwritten pages in testpages/
+```
+If the laptop says no Hindi voice, the app shows exactly where to install one (Windows: Settings › Time & language › Speech).
 
 ## 90-second demo script
 1. **Gap (15s):** "ASHA workers keep up to 11 paper registers. Doctors see it about 21 days later. Nothing ever comes back." Open the Live Bridge.

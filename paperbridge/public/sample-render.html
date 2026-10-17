@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- Renders the demo register pages as phone-photo-like images and measures every row and evidence word.
+     Used by tools/make-samples.js; not linked from the site. -->
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400&family=Caveat:wght@500&display=swap" rel="stylesheet" />
+<style>
+html, body { margin: 0; width: 800px; height: 1000px; overflow: hidden; background: #6b5440; }
+body { background: radial-gradient(ellipse at 30% 20%, #8a6c52, #4a3828 80%); }
+.photo { position: absolute; left: 0; top: 0; width: 800px; height: 1000px; }
+.page { position: absolute; left: 34px; top: 22px; width: 740px; height: 960px; background: #f6f0de; border-radius: 3px;
+  transform: perspective(1400px) rotateX(4deg) rotateZ(-1.1deg); transform-origin: 50% 60%;
+  box-shadow: 0 30px 50px -10px rgba(0,0,0,.55), 0 4px 10px rgba(0,0,0,.3);
+  background-image: repeating-linear-gradient(transparent 0 39px, #a9bedd 39px 40.5px); background-position: 0 128px; }
+.page::before { content: ""; position: absolute; left: 58px; top: 0; bottom: 0; width: 2px; background: rgba(205,70,60,.55); }
+.light { position: absolute; inset: 0; pointer-events: none; border-radius: 3px;
+  background: radial-gradient(ellipse at 25% 15%, rgba(255,255,240,.35), transparent 55%), linear-gradient(115deg, transparent 55%, rgba(40,25,10,.18) 100%); }
+.grain { position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .25 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+h1 { position: absolute; left: 76px; top: 26px; margin: 0; font: 400 34px Kalam, cursive; color: #22285e; }
+.date { position: absolute; left: 80px; top: 76px; font: 300 24px Kalam, cursive; color: #2a3070; }
+.ln { position: absolute; white-space: nowrap; font-family: Kalam, cursive; }
+.ln.head { font-size: 31px; font-weight: 400; }
+.ln.note { font-size: 27px; font-weight: 300; }
+.smudge { position: absolute; width: 230px; height: 46px; border-radius: 50%; background: rgba(90,70,120,.28); filter: blur(7px); }
+.tick { position: absolute; font: 400 30px Caveat, cursive; color: #b2261c; }
+</style>
+</head>
+<body>
+<div class="photo"><div class="page" id="page"><div class="light"></div><div class="grain"></div>
+  <h1>ASHA Register · Sonpur Block</h1><div class="date" id="date"></div></div></div>
+<pre id="out" style="display:none"></pre>
+<script>
+const P = {
+  1: [["1. Sunita Devi, 24 F — Rampur", "7 mahina garbh, pair me sujan, BP 150/100 !!", ["pair me sujan", "BP 150/100 !!"]],
+      ["2. Aarav, 1 saal M — Rampur", "DPT-2 tika baki, nahi laga", ["DPT-2 tika baki"]],
+      ["3. Ramesh Yadav, 52 M — Sonpur", "bukhar 4 din, badan dard", ["bukhar 4 din"]],
+      ["4. Pooja, 3 saal F — Kheda", "vajan 9.1 kg, MUAC laal", ["MUAC laal"]],
+      ["5. Kamla Bai, 31 F — Sonpur", "routine visit — sab theek", []]],
+  2: [["1. Geeta, 34 F — Sonpur", "bukhar 3 din, kaanpna", ["bukhar 3 din"]],
+      ["2. Mohan Lal, 60 M — Sonpur", "tez bukhar 5 din, ulti", ["tez bukhar 5 din", "ulti"]],
+      ["3. Rinku, 8 M — Sonpur", "bukhar + sharir pe daane", ["sharir pe daane"]],
+      ["4. Ramesh Yadav, 52 M — Sonpur", "bukhar 7 din, ab ulti, kamzori", ["bukhar 7 din", "ab ulti"]],
+      ["5. Savitri, 27 F — Kheda", "4 mahina garbh, checkup OK", []]],
+};
+const n = +new URLSearchParams(location.search).get("page") || 1;
+const page = document.getElementById("page");
+document.getElementById("date").textContent = `दिनांक 14/10/26 · पेज ${n} · Meena`;
+// Deterministic "hand": small wobble per line so both renders and boxes are repeatable.
+let seed = n * 97; const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280) - 0.5;
+const INK = ["#1f2a6b", "#23307a", "#1a2560", "#2b3680"];
+const lines = [];
+P[n].forEach(([head, note, ev], i) => {
+  const top = 128 + i * 160;
+  const mk = (txt, cls, x, y) => { const d = document.createElement("div"); d.className = "ln " + cls; d.textContent = txt;
+    d.style.left = x + "px"; d.style.top = y + "px"; d.style.color = INK[(i + (cls === "note" ? 1 : 0)) % 4];
+    d.style.transform = `rotate(${rnd() * 1.6}deg)`; d.style.letterSpacing = rnd() * 0.6 + "px"; page.append(d); return d; };
+  const h = mk(head, "head", 70 + rnd() * 14, top - 6 + rnd() * 4);
+  const t = mk(note, "note", 100 + rnd() * 16, top + 38 + rnd() * 4);
+  lines.push({ h, t, ev });
+});
+if (n === 1) { const s = document.createElement("div"); s.className = "smudge"; s.style.left = "80px"; s.style.top = (128 + 3 * 160 - 4) + "px"; page.append(s); } // Pooja: the low-confidence row
+if (n === 2) { const k = document.createElement("div"); k.className = "tick"; k.textContent = "PHC?"; k.style.left = "600px"; k.style.top = (128 + 1 * 160 + 30) + "px"; k.style.transform = "rotate(-8deg)"; page.append(k); }
+
+// Measure in photo pixels, normalised to 0-1000 like Gemini: [ymin, xmin, ymax, xmax].
+const N = (r) => [Math.round(r.top), Math.round(r.left * 1.25), Math.round(r.bottom), Math.round(r.right * 1.25)].map((v) => Math.max(0, Math.min(1000, v)));
+const union = (a, b) => ({ top: Math.min(a.top, b.top), left: Math.min(a.left, b.left), bottom: Math.max(a.bottom, b.bottom), right: Math.max(a.right, b.right) });
+function rectOf(el, sub) {
+  const txt = el.firstChild, i = el.textContent.indexOf(sub); const rg = document.createRange();
+  rg.setStart(txt, i); rg.setEnd(txt, i + sub.length);
+  const r = rg.getBoundingClientRect(); return { top: r.top - 3, left: r.left - 4, bottom: r.bottom + 2, right: r.right + 4 };
+}
+document.fonts.ready.then(() => setTimeout(() => {
+  const out = lines.map(({ h, t, ev }) => {
+    const row = union(h.getBoundingClientRect(), t.getBoundingClientRect());
+    return { box: N({ top: row.top - 4, left: row.left - 6, bottom: row.bottom + 4, right: row.right + 8 }), evidence: ev.map((s) => ({ text: s, box: N(rectOf(t, s)) })) };
+  });
+  document.getElementById("out").textContent = JSON.stringify(out);
+  document.title = "READY";
+}, 200));
+</script>
+</body>
+</html>

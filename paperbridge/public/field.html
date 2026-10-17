@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#05060d" />
+<meta name="theme-color" content="#1b1a2e" />
 <title>Kaagaz Field</title>
 <link rel="icon" href="logo.svg" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon-192.png" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="motion.css" />
 <link rel="stylesheet" href="site.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="nav.js"></script>
+<script src="voice.js"></script>
 </head>
 <body>
 <div class="aurora"></div><div class="grid-bg"></div>
@@ -18,6 +20,7 @@
   <div class="brand"><img class="logo" src="logo.svg" alt="" /> Kaagaz
     <span class="net" id="net"><span class="dot"></span> <span id="netTxt">online</span></span></div>
 
+  <button class="btn primary install" id="install" hidden>📲 Install Kaagaz on this phone</button>
   <input class="txt" id="worker" value="ASHA Meena · Sonpur" aria-label="Worker name" />
 
   <label class="cam glass" id="cam">
@@ -201,8 +204,11 @@ function stamp(id) {
   if (!id) return;
   const url = `${location.origin}/page.html?scan=${encodeURIComponent(id)}`;
   $("#qr").innerHTML = ""; $("#stampLink").href = url;
-  if (window.QRCode) new QRCode($("#qr"), { text: url, width: 96, height: 96, colorDark: "#1b1a2e", colorLight: "#fffaf0" });
-  else $("#qr").textContent = "QR";
+  const draw = () => window.QRCode ? new QRCode($("#qr"), { text: url, width: 96, height: 96, colorDark: "#1b1a2e", colorLight: "#fffaf0" }) : ($("#qr").textContent = "QR");
+  if (window.QRCode) return draw();
+  // Loaded only when a stamp is needed, so the app itself never waits on the network.
+  const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+  sc.onload = draw; sc.onerror = draw; document.head.append(sc);
 }
 
 // ---------- speak instead of write ----------
@@ -291,13 +297,13 @@ const mine = {};
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 $("#send").onclick = () => submit({ scanId: newId(), image: img, preview });
 $("#demo").onclick = () => {
-  const p = demoPage; setPreview(`/sample${p}.svg`); img = null;
+  const p = demoPage; setPreview(`/sample${p}.png`); img = null;
   demoPage = p === 1 ? 2 : 1; $("#demo").textContent = `Try sample page ${demoPage}`;
-  submit({ scanId: newId(), demoPage: p, preview: `/sample${p}.svg` });
+  submit({ scanId: newId(), demoPage: p, preview: `/sample${p}.png` });
 };
 
 // ---------- inbox: voice note in, voice reply out (closing the loop) ----------
-function speak(t, onend) { const u = new SpeechSynthesisUtterance(t); u.lang = "hi-IN"; u.rate = .95; if (onend) u.onend = onend; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+const speak = (t, onend) => say(t, onend);
 const ack = (id, status, reply) => post("/api/ack", { id, status, reply }).catch(() => {});
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -363,6 +369,11 @@ es.addEventListener("alert", (m) => addAlert(JSON.parse(m.data)));
 es.addEventListener("reset", () => { try { localStorage.removeItem(QKEY); } catch {} location.reload(); });
 es.onopen = () => { renderNet(); flushQueue(); };
 renderNet();
+if ("serviceWorker" in navigator && isSecureContext) navigator.serviceWorker.register("/sw.js").catch(() => {});
+// Offer install on Android Chrome: the ASHA app then lives on the home screen like any app.
+let installEvt;
+addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; $("#install").hidden = false; });
+$("#install").onclick = async () => { installEvt?.prompt(); await installEvt?.userChoice; $("#install").hidden = true; };
 </script>
 </body>
 </html>

@@ -8,3 +8,6 @@ paperbridge/testpages/*.jpeg
 paperbridge/testpages/*.png
 paperbridge/testpages/*.webp
 paperbridge/eval-report.html
+paperbridge/data/
+paperbridge/cert/
+paperbridge/e2e-shots/

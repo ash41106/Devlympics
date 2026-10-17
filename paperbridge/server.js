@@ -1,5 +1,7 @@
 // Kaagaz — zero-dependency server: static files, SSE live sync, streaming Gemini Vision proxy.
 const http = require("http");
+const https = require("https");
+const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -8,14 +10,24 @@ const PORT = process.env.PORT || 3000;
 const KEY = process.env.GEMINI_API_KEY || "";
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const PUB = path.join(__dirname, "public");
-const MIME = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".png": "image/png", ".json": "application/json" };
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
+const MIME = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg",
+  ".json": "application/json", ".webmanifest": "application/manifest+json" };
+const DATA = path.join(__dirname, "data"), SCANS = path.join(DATA, "scans"), STATE_FILE = path.join(DATA, "state.json");
+fs.mkdirSync(SCANS, { recursive: true });
 
-const state = { entries: [], alerts: [] };
+// Everything survives a restart: records in data/state.json, original photos in data/scans/.
+const state = (() => { try { return JSON.parse(fs.readFileSync(STATE_FILE, "utf8")); } catch { return { entries: [], alerts: [] }; } })();
+let saveT;
+const save = () => { clearTimeout(saveT); saveT = setTimeout(() => {
+  fs.writeFile(STATE_FILE + ".tmp", JSON.stringify(state), (e) => !e && fs.rename(STATE_FILE + ".tmp", STATE_FILE, () => {}));
+}, 300); };
 const scans = new Map(); // scanId -> { buf, mime }  (original photos, so every record links back to its paper)
 const clients = new Set();
 const broadcast = (type, data) => {
   const msg = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`;
   clients.forEach((res) => res.write(msg));
+  save();
 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -103,14 +115,10 @@ const DEMO = {
     { name: "Savitri", age: 27, gender: "F", village: "Kheda", category: "pregnancy", note: "4th month, routine checkup OK", risk: "low", reason: "Normal antenatal visit" },
   ],
 };
-// Evidence boxes for the sample pages: [noteLine row, start char, end char] on the 800x1000 SVG (≈11px per char at x=110).
-const ev = (i, a, b, text) => ({ text, box: [150 + i * 120 + 56, Math.round((110 + a * 11) * 1.25), 150 + i * 120 + 94, Math.round((110 + b * 11) * 1.25)] });
-const EVIDENCE = {
-  1: [[ev(0, 15, 28, "pair me sujan"), ev(0, 30, 44, "BP 150/100 !!")], [ev(1, 0, 15, "DPT-2 tika baki")], [ev(2, 0, 12, "bukhar 4 din")], [ev(3, 15, 24, "MUAC laal")], []],
-  2: [[ev(0, 0, 12, "bukhar 3 din")], [ev(1, 0, 17, "tez bukhar 5 din"), ev(1, 18, 22, "ulti")], [ev(2, 9, 24, "sharir pe daane")], [ev(3, 0, 12, "bukhar 7 din"), ev(3, 14, 21, "ab ulti")], []],
-};
+// Row and evidence boxes for the sample photos were measured from the rendered pages (public/sample-render.html), not guessed.
+const MEASURED = JSON.parse(fs.readFileSync(path.join(PUB, "samples.json"), "utf8"));
 const ASK = { "1-2": "रमेश जी को उल्टी या कहीं से खून आ रहा है क्या?", "2-2": "रिंकू को बुखार कितने दिन से है?" };
-Object.entries(DEMO).forEach(([p, rows]) => rows.forEach((e, i) => { e.box = row(i); e.confidence ??= 0.93; e.evidence = EVIDENCE[p][i]; e.ask = ASK[`${p}-${i}`] || null; }));
+Object.entries(DEMO).forEach(([p, rows]) => rows.forEach((e, i) => { const m = MEASURED[p]?.[i]; e.box = m?.box || row(i); e.confidence ??= 0.93; e.evidence = m?.evidence || []; e.ask = ASK[`${p}-${i}`] || null; }));
 
 // IDSP/IHIP S-form syndromic category, so district data can flow into national surveillance.
 function syndrome(e) {
@@ -136,7 +144,7 @@ function enrich(e) {
 
 const json = (res, obj, code = 200) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(obj)); };
 
-const server = http.createServer(async (req, res) => {
+async function handle(req, res) {
   const url = new URL(req.url, "http://x");
   try {
     if (url.pathname === "/api/stream") {
@@ -148,7 +156,11 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (url.pathname.startsWith("/api/scan/")) {
-      const s = scans.get(url.pathname.slice(10));
+      const id = url.pathname.slice(10).replace(/\W/g, "");
+      let s = scans.get(id);
+      if (!s) for (const [ext, mime] of [[".jpg", "image/jpeg"], [".png", "image/png"]]) {
+        const f = path.join(SCANS, id + ext); if (fs.existsSync(f)) { s = { buf: fs.readFileSync(f), mime }; scans.set(id, s); break; }
+      }
       if (!s) { res.writeHead(404); return res.end(); }
       res.writeHead(200, { "Content-Type": s.mime }); return res.end(s.buf);
     }
@@ -159,12 +171,13 @@ const server = http.createServer(async (req, res) => {
       let rows, source = "gemini", src;
       if (KEY && image && !demoPage) {
         scans.set(scanId, { buf: Buffer.from(image, "base64"), mime });
+        fs.writeFile(path.join(SCANS, scanId.replace(/\W/g, "") + (mime === "image/png" ? ".png" : ".jpg")), scans.get(scanId).buf, () => {});
         src = `/api/scan/${scanId}`;
         try { rows = await geminiExtract(image, mime, found); }
-        catch (e) { console.error(e.message); rows = DEMO[1]; source = "offline-fallback"; src = "/sample1.svg"; }
+        catch (e) { console.error(e.message); rows = DEMO[1]; source = "offline-fallback"; src = "/sample1.png"; }
       } else {
         const p = DEMO[demoPage] ? demoPage : 1;
-        rows = DEMO[p]; source = "demo"; src = `/sample${p}.svg`;
+        rows = DEMO[p]; source = "demo"; src = `/sample${p}.png`;
         await sleep(700);
         for (const e of rows) { found({ name: e.name, village: e.village }); await sleep(550); }
       }
@@ -241,6 +254,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/api/reset" && req.method === "POST") {
       state.entries = []; state.alerts = []; scans.clear();
+      fs.readdirSync(SCANS).forEach((f) => fs.unlink(path.join(SCANS, f), () => {}));
       broadcast("reset", {});
       return json(res, {});
     }
@@ -251,14 +265,46 @@ const server = http.createServer(async (req, res) => {
   } catch (e) {
     json(res, { error: e.message }, 500);
   }
-});
+}
+
+// Phones need HTTPS for the mic, offline install and vibration. A self-signed cert for this laptop's current IPs is made on start.
+const ips = Object.values(os.networkInterfaces()).flat().filter((i) => i && i.family === "IPv4" && !i.internal).map((i) => i.address);
+function cert() {
+  const dir = path.join(__dirname, "cert"), key = path.join(dir, "key.pem"), crt = path.join(dir, "cert.pem"), tag = path.join(dir, "ips.txt");
+  const want = ips.join(",");
+  const have = () => fs.existsSync(key) && fs.existsSync(crt);
+  if (have() && fs.existsSync(tag) && fs.readFileSync(tag, "utf8") === want) return { key: fs.readFileSync(key), cert: fs.readFileSync(crt) };
+  const tries = ["openssl", "C:/Program Files/Git/usr/bin/openssl.exe", "C:/Program Files/Git/mingw64/bin/openssl.exe"];
+  fs.mkdirSync(dir, { recursive: true });
+  const san = ["DNS:localhost", "IP:127.0.0.1", ...ips.map((i) => "IP:" + i)].join(",");
+  for (const bin of tries) {
+    try {
+      execFileSync(bin, ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "365", "-keyout", key, "-out", crt, "-subj", "/CN=Kaagaz", "-addext", "subjectAltName=" + san], { stdio: "ignore" });
+      fs.writeFileSync(tag, want);
+      return { key: fs.readFileSync(key), cert: fs.readFileSync(crt) };
+    } catch {}
+  }
+  return have() ? { key: fs.readFileSync(key), cert: fs.readFileSync(crt) } : null;
+}
+
+const server = http.createServer(handle);
+server.on("error", (e) => { console.error(e.code === "EADDRINUSE" ? `
+  Port ${PORT} is busy: Kaagaz is probably already running. Close that window, or run with another port: set PORT=3001
+` : e.message); process.exit(1); });
+const tls = cert();
+if (tls) https.createServer(tls, handle).listen(HTTPS_PORT).on("error", (e) => console.error("HTTPS:", e.message));
 
 server.listen(PORT, () => {
-  const ips = Object.values(os.networkInterfaces()).flat().filter((i) => i && i.family === "IPv4" && !i.internal).map((i) => i.address);
-  console.log(`\n  Kaagaz running  ${KEY ? "(Gemini LIVE: " + MODEL + ")" : "(DEMO mode: set GEMINI_API_KEY for live)"}`);
-  console.log(`  Website:         http://localhost:${PORT}`);
-  console.log(`  Live Bridge:     http://localhost:${PORT}/bridge.html   <- use this on the projector`);
+  console.log(`
+  Kaagaz running  ${KEY ? "(Gemini LIVE: " + MODEL + ")" : "(DEMO mode: put your Gemini key in key.txt for live)"}`);
+  console.log(`  Saved data:      ${state.entries.length} patients, ${state.alerts.length} messages (data/)`);
+  console.log(`  Live Bridge:     http://localhost:${PORT}/bridge.html   <- projector`);
   console.log(`  Doctor:          http://localhost:${PORT}/doctor.html`);
-  ips.forEach((ip) => console.log(`  ASHA phone app:  http://${ip}:${PORT}/field.html`));
+  if (tls) {
+    ips.forEach((ip) => console.log(`  ASHA phone:      https://${ip}:${HTTPS_PORT}/field.html   <- tap "Advanced > Proceed" once`));
+  } else {
+    console.log("  (No HTTPS: install Git for Windows so openssl is available; phone mic will not work over http)");
+    ips.forEach((ip) => console.log(`  ASHA phone:      http://${ip}:${PORT}/field.html`));
+  }
   console.log("");
 });

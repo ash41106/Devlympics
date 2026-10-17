@@ -2,6 +2,9 @@
 (function () {
   const embed = new URLSearchParams(location.search).has("embed");
   if (embed) document.documentElement.classList.add("embed");
+  // Fonts load in the background (never block the first paint on a slow village connection); the service worker caches them.
+  const F = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;600&display=swap";
+  document.write(`<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link rel="stylesheet" href="${F}" media="print" onload="this.media='all'" />`);
   document.write('<link rel="stylesheet" href="fx.css" /><link rel="stylesheet" href="theme.css" /><script src="fx.js" defer><\/script>');
   if (embed) return;
   const here = location.pathname.replace(/\/$/, "/index.html").split("/").pop() || "index.html";

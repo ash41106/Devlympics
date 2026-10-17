@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="motion.css" />
 <link rel="stylesheet" href="site.css" />
 <script src="nav.js"></script>
+<script src="voice.js"></script>
 </head>
 <body>
 <div class="aurora"></div><div class="grid-bg"></div>
@@ -339,7 +340,7 @@ function drawCrop(e) {
   };
   im.src = e.src;
 }
-function speak(t) { const u = new SpeechSynthesisUtterance(t); u.lang = "hi-IN"; u.rate = .95; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+const speak = (t) => say(t);
 $("#mSpeak").onclick = () => speak(current.hi);
 $("#mClose").onclick = () => $("#modal").classList.remove("on");
 $("#modal").onclick = (e) => e.target.id === "modal" && $("#modal").classList.remove("on");
