@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaagaz · Pitch</title>
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;600&display=swap" />
+<style>
+:root { --paper: #f3ead6; --card: #fffaf0; --ink: #1b1a2e; --dim: #6e6650; --red: #c8321e; --hl: #ffc93c; --green: #2f7a3b; --night: #12111f; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #000; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: var(--ink); }
+/* 16:9 stage, scaled to fit any screen */
+.stage { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: 0 0; overflow: hidden;
+  background: var(--paper); background-image: linear-gradient(90deg, transparent 95px, rgba(200,50,30,.35) 95px 97px, transparent 97px), repeating-linear-gradient(transparent 0 47px, rgba(43,58,143,.09) 47px 48px); }
+.stage.dark { background: radial-gradient(ellipse at 50% 0%, #2a2647, var(--night) 65%); color: var(--paper); }
+.slide { position: absolute; inset: 0; padding: 70px 120px 150px 150px; display: none; }
+.slide.on { display: block; }
+h1, h2 { font-family: Fraunces, Georgia, serif; font-weight: 900; letter-spacing: -.035em; line-height: 1.02; }
+h1 { font-size: 150px; } h2 { font-size: 72px; }
+.hl { font-family: Kalam, cursive; font-weight: 700; background: linear-gradient(transparent 58%, var(--hl) 58% 92%, transparent 92%); padding: 0 .08em; display: inline-block; transform: rotate(-1.5deg); color: var(--ink); }
+.kick { font-family: Kalam, cursive; font-size: 34px; color: var(--red); margin-bottom: 14px; }
+.card { background: var(--card); border: 2.5px solid var(--ink); border-radius: 18px; box-shadow: 7px 7px 0 var(--ink); }
+.shot { border: 2.5px solid var(--ink); border-radius: 16px; box-shadow: 8px 8px 0 var(--ink); background: #fff; display: block; }
+/* captions: the narration, on screen, so the video explains itself even without sound */
+.cap { position: absolute; left: 150px; right: 120px; bottom: 34px; min-height: 86px; display: flex; align-items: center; gap: 18px;
+  background: var(--ink); color: #fffaf0; border-radius: 16px; padding: 18px 28px; font-size: 27px; line-height: 1.35; font-weight: 500; box-shadow: 6px 6px 0 var(--hl); }
+.cap b { color: var(--hl); font-weight: 700; }
+.cap .n { flex: none; font: 700 22px Kalam, cursive; background: var(--hl); color: var(--ink); border-radius: 10px; padding: 4px 12px; }
+.dark .cap { background: #fffaf0; color: var(--ink); box-shadow: 6px 6px 0 var(--hl); } .dark .cap b { color: var(--red); }
+.bar { position: absolute; left: 0; bottom: 0; height: 8px; background: var(--hl); width: 0; z-index: 5; }
+.brand { position: absolute; right: 40px; top: 30px; display: flex; gap: 10px; align-items: center; font: 900 30px Fraunces, serif; z-index: 4; }
+.brand img { width: 40px; } .brand em { font: 700 26px Kalam, cursive; color: var(--red); font-style: normal; }
+
+/* entrance animations (all CSS so the video renderer can scrub them frame by frame) */
+.in { opacity: 0; animation: up .8s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+.pop { opacity: 0; animation: pop .7s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes pop { from { opacity: 0; transform: scale(.6) rotate(-4deg); } to { opacity: 1; transform: none; } }
+.d1 { animation-delay: .4s; } .d2 { animation-delay: 1s; } .d3 { animation-delay: 1.8s; } .d4 { animation-delay: 2.6s; } .d5 { animation-delay: 3.4s; } .d6 { animation-delay: 4.4s; } .d7 { animation-delay: 5.6s; }
+
+/* S2: the gap */
+.sides { display: grid; grid-template-columns: 1fr 340px 1fr; gap: 0; align-items: center; margin-top: 40px; }
+.side { padding: 30px 34px; } .side h3 { font: 900 40px Fraunces, serif; margin-bottom: 14px; } .side li { font-size: 25px; line-height: 1.5; list-style: none; }
+.side li::before { content: "✗ "; color: var(--red); font-weight: 800; }
+.side.paper { background: #fff3cf; transform: rotate(-1.5deg); }
+.gap { text-align: center; position: relative; height: 260px; }
+.gap .plank { position: absolute; top: 140px; height: 16px; width: 120px; background: var(--ink); border-radius: 4px; }
+.gap .plank.l { left: 0; transform-origin: left; animation: fallL 1.2s 1.8s forwards; } .gap .plank.r { right: 0; transform-origin: right; animation: fallR 1.2s 1.8s forwards; }
+@keyframes fallL { to { transform: rotate(28deg); } } @keyframes fallR { to { transform: rotate(-28deg); } }
+.gap b { position: absolute; left: 0; right: 0; top: 0; font: 900 76px Fraunces, serif; color: var(--red); white-space: nowrap; }
+.gap span { position: absolute; left: 0; right: 0; top: 200px; font: 700 26px Kalam, cursive; color: var(--red); }
+
+/* S3: the bridge flow */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 60px; }
+.step { padding: 30px 26px; position: relative; min-height: 300px; }
+.step .ic { font-size: 66px; } .step h3 { font: 900 34px Fraunces, serif; margin: 12px 0 10px; } .step p { font-size: 22px; line-height: 1.45; color: var(--dim); }
+.step .k { position: absolute; top: -22px; left: 22px; background: var(--hl); border: 2.5px solid var(--ink); border-radius: 10px; font: 700 22px Kalam, cursive; padding: 2px 12px; }
+.step.back { background: #e1efd9; }
+.arrow { position: absolute; right: -30px; top: 140px; font-size: 34px; z-index: 2; }
+
+/* feature slides: text + real screenshot */
+.split { display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center; height: 100%; }
+.split p.big { font-size: 32px; line-height: 1.4; margin-top: 22px; color: #3a3650; } .split p.big b { background: linear-gradient(transparent 60%, rgba(255,201,60,.7) 60%); }
+.frame { position: relative; display: flex; justify-content: center; align-items: center; height: 100%; }
+.frame img { max-height: 640px; max-width: 100%; }
+.tag { position: absolute; font: 700 28px Kalam, cursive; background: var(--red); color: #fff; padding: 6px 16px; border-radius: 12px; border: 2.5px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.zoom { animation: zoom 9s ease-in-out forwards; } @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+/* S8 grid */
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 34px; align-items: start; }
+.feat { padding: 18px; text-align: left; } .feat img { width: 100%; border-radius: 10px; border: 2px solid var(--ink); display: block; max-height: 300px; object-fit: cover; object-position: top; }
+.feat h4 { font: 900 26px Fraunces, serif; margin: 14px 0 6px; } .feat p { font-size: 19px; color: var(--dim); line-height: 1.4; }
+
+/* S9 the number */
+.num { display: flex; justify-content: center; align-items: flex-end; gap: 110px; margin-top: 70px; text-align: center; }
+.num .old { font: 700 150px Kalam, cursive; color: #f28b82; position: relative; }
+.num .old::after { content: ""; position: absolute; left: -10px; right: -10px; top: 52%; height: 12px; background: #f28b82; transform: scaleX(0) rotate(-6deg); transform-origin: left; animation: strike .6s 1.4s forwards; }
+@keyframes strike { to { transform: scaleX(1) rotate(-6deg); } }
+.num .new { font: 900 240px/0.9 Fraunces, serif; color: var(--hl); text-shadow: 0 0 80px rgba(255,201,60,.45); }
+.num small { display: block; font: 600 26px Inter, sans-serif; color: #cfc6b0; margin-top: 14px; }
+
+/* S10 close */
+.close h1 { font-size: 110px; } .chips { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 46px; }
+.chips span { font: 700 24px Inter; padding: 10px 20px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--card); box-shadow: 4px 4px 0 var(--ink); }
+
+.hint { position: fixed; left: 12px; bottom: 10px; color: #777; font: 12px Inter; z-index: 9; }
+.render .hint { display: none; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="brand"><img src="logo.svg" alt="" />Kaagaz <em>कागज़</em></div>
+
+  <section class="slide" data-dur="7" data-dark="1">
+    <div style="padding-top:110px">
+      <div class="kick in" style="color:#ff8a70">Bridge the Gap · Devlympics Shunya 2026</div>
+      <h1 class="in d1" style="color:var(--paper)">Paper that</h1>
+      <h1 class="in d2"><span class="hl" style="font-size:170px">talks back.</span></h1>
+    </div>
+    <div class="cap in d3"><span class="n">कागज़ = paper</span>Kaagaz connects India's village health workers and their doctors, <b>using the paper they already write on.</b></div>
+  </section>
+
+  <section class="slide" data-dur="11">
+    <div class="kick in">The gap</div>
+    <h2 class="in d1">Two sides that should talk every day. <span class="hl">They can't.</span></h2>
+    <div class="sides">
+      <div class="side card paper in d2"><h3>📒 ASHA worker</h3><ul><li>Writes everything on paper</li><li>Up to 11 registers</li><li>Sees danger first, no doctor to ask</li><li>Hindi, low signal</li></ul></div>
+      <div class="gap"><i class="plank l"></i><i class="plank r"></i><b class="pop d3">~21 days</b><span class="in d4">and nothing comes back</span></div>
+      <div class="side card in d2"><h3>🩺 District doctor</h3><ul><li>Gets data weeks late</li><li>Can't see who needs help today</li><li>Spots outbreaks too late</li><li>No way to reply to the village</li></ul></div>
+    </div>
+    <div class="cap in d5"><span class="n">the problem</span>India's <b>1 million ASHA workers</b> record village health on paper. Doctors see it weeks later, and <b>nothing ever goes back.</b></div>
+  </section>
+
+  <section class="slide" data-dur="9">
+    <div class="kick in">The bridge</div>
+    <h2 class="in d1">Keep the paper. <span class="hl">Lose the delay.</span></h2>
+    <div class="flow">
+      <div class="step card in d2"><span class="k">1</span><div class="ic">📷</div><h3>Snap</h3><p>The worker photographs today's register page. No typing, no new forms.</p><span class="arrow">➜</span></div>
+      <div class="step card in d3"><span class="k">2</span><div class="ic">✨</div><h3>AI reads</h3><p>Gemini reads Hindi + English handwriting and flags danger signs.</p><span class="arrow">➜</span></div>
+      <div class="step card in d4"><span class="k">3</span><div class="ic">🩺</div><h3>Doctor acts</h3><p>Urgent patients first. One tap to send an instruction.</p><span class="arrow">➜</span></div>
+      <div class="step card back in d5"><span class="k">4</span><div class="ic">🔊</div><h3>Voice back</h3><p>It reaches the worker as a Hindi voice note. She replies by speaking.</p></div>
+    </div>
+    <div class="cap in d6"><span class="n">how</span>One photo goes up. <b>Help comes back down, in Hindi, by voice.</b> The bridge works both ways.</div>
+  </section>
+
+  <section class="slide" data-dur="10">
+    <div class="split">
+      <div><div class="kick in">Step 1 · Paper → AI</div><h2 class="in d1">The AI shows <span class="hl">why.</span></h2>
+        <p class="big in d2">Gemini reads every row and highlights <b>the exact handwritten words</b> that make a patient urgent, right on the photo.</p></div>
+      <div class="frame in d1"><img class="shot zoom" src="pitch/xray.png" alt="Register photo with danger words highlighted" style="max-height:660px" />
+        <span class="tag pop d4" style="right:-10px;top:120px">BP 150/100 = danger</span></div>
+    </div>
+    <div class="cap in d3"><span class="n">X-ray</span>"BP 150/100" and "pair me sujan" (swollen feet) glow red: <b>possible pre-eclampsia.</b> No black box, the evidence is on the paper.</div>
+  </section>
+
+  <section class="slide" data-dur="9">
+    <div class="split">
+      <div><div class="kick in">Step 2 · AI asks back</div><h2 class="in d1">Something missing? <span class="hl">It asks.</span></h2>
+        <p class="big in d2">If a detail would change the decision, the phone <b>asks the worker out loud in Hindi</b>. Her spoken answer updates the patient instantly.</p></div>
+      <div class="frame in d1"><img class="shot" src="pitch/ask.png" alt="Hindi follow-up question" style="width:640px" /></div>
+    </div>
+    <div class="cap in d3"><span class="n">conversation</span>"Is Ramesh vomiting or bleeding?" She says <b>"हाँ"</b>, and Ramesh jumps to <b>urgent</b> on the doctor's screen.</div>
+  </section>
+
+  <section class="slide" data-dur="10">
+    <div class="split" style="grid-template-columns:1fr 1fr">
+      <div><div class="kick in">Step 3 · Doctor</div><h2 class="in d1">A human <span class="hl">always checks.</span></h2>
+        <p class="big in d2">The doctor sees the AI's reading <b>next to the original handwriting</b>, fixes anything wrong, then sends an instruction in one tap.</p></div>
+      <div class="frame in d1" style="overflow:hidden"><img class="shot zoom" src="pitch/doctor-modal.png" alt="Doctor verifying the AI reading" style="max-height:690px" /></div>
+    </div>
+    <div class="cap in d3"><span class="n">trust</span>Unsure readings are <b>flagged for a human</b>. AI speeds the doctor up; it never decides alone.</div>
+  </section>
+
+  <section class="slide" data-dur="10">
+    <div class="split" style="grid-template-columns:.9fr 1.2fr">
+      <div><div class="kick in">Step 4 · Back to the village</div><h2 class="in d1">The paper <span class="hl">talks back.</span></h2>
+        <p class="big in d2">The instruction arrives as a <b>Hindi voice note</b>, and the doctor's reply is <b>handwritten into the margin of her own page.</b></p></div>
+      <div class="frame" style="gap:24px;align-items:flex-start">
+        <img class="shot in d1" src="pitch/ink.png" alt="Doctor's reply in ink on the paper" style="width:430px" />
+        <img class="shot pop d4" src="pitch/inbox.png" alt="Hindi voice note on the phone" style="width:330px;margin-top:120px" />
+      </div>
+    </div>
+    <div class="cap in d3"><span class="n">loop closed</span>"सुनीता जी को आज ही PHC ले जाएँ." She replies by voice: <b>"हाँ, अभी जा रही हूँ."</b> The doctor sees it.</div>
+  </section>
+
+  <section class="slide" data-dur="11">
+    <div class="kick in">Built for real villages, not just demos</div>
+    <h2 class="in d1" style="font-size:62px">Works where the <span class="hl">network doesn't.</span></h2>
+    <div class="grid4">
+      <div class="feat card in d2"><img src="pitch/sms.png" alt="" /><h4>📟 SMS-only phones</h4><p>No data? The instruction arrives as an SMS. Reply with one key: 1, 2 or 3.</p></div>
+      <div class="feat card in d3"><img src="pitch/voice.png" alt="" /><h4>🎙 Speak, don't write</h4><p>Say the visit in Hindi; it becomes a triaged record.</p></div>
+      <div class="feat card in d4"><img src="pitch/stamp.png" alt="" /><h4>🔗 QR stamp</h4><p>A sticker on the paper opens its digital record, forever linked.</p></div>
+      <div class="feat card in d5"><img src="pitch/map.png" alt="" /><h4>🚨 Outbreak alarm</h4><p>3 fever cases in one village, even across pages, raise an alarm early.</p></div>
+    </div>
+    <div class="cap in d6"><span class="n">real world</span><b>Works offline</b> (pages queue and sync later), installs like an app, and hides names before projecting.</div>
+  </section>
+
+  <section class="slide" data-dur="8" data-dark="1">
+    <div style="text-align:center;padding-top:30px"><div class="kick in" style="color:#ff8a70">The one number</div>
+      <h2 class="in d1" style="color:var(--paper)">Paper → doctor → voice → reply</h2></div>
+    <div class="num"><div class="in d2"><div class="old">21 days</div><small>today · one way</small></div>
+      <div class="pop d4"><div class="new">0:21</div><small>with Kaagaz · both ways, measured live</small></div></div>
+    <div class="cap in d5"><span class="n">impact</span>From weeks to <b>seconds</b>, and for the first time, <b>the village hears back.</b></div>
+  </section>
+
+  <section class="slide close" data-dur="9">
+    <div style="padding-top:60px">
+      <div class="kick in">Kaagaz · कागज़</div>
+      <h1 class="in d1">Same paper. Same worker.</h1>
+      <h1 class="in d2"><span class="hl">Now the paper talks back.</span></h1>
+      <div class="chips in d3"><span>Gemini 2.5 Flash Vision</span><span>Node.js · zero dependencies</span><span>Web Speech · Hindi</span><span>Offline PWA</span><span>Open source</span></div>
+    </div>
+    <div class="cap in d4"><span class="n">next</span>Any paper register (anganwadi, school, ration) can be bridged the same way. <b>No new hardware. No new habits.</b></div>
+  </section>
+
+  <div class="bar" id="bar"></div>
+</div>
+<div class="hint">Space: pause · ← →: slides · F: fullscreen</div>
+<script>
+const stage = document.getElementById("stage"), slides = [...document.querySelectorAll(".slide")], bar = document.getElementById("bar");
+// Captions: keep the label chip separate and the sentence as one flowing block.
+document.querySelectorAll(".cap").forEach((c) => { const t = document.createElement("span"); [...c.childNodes].filter((n) => !(n.classList && n.classList.contains("n"))).forEach((n) => t.append(n)); c.append(t); });
+const starts = []; let total = 0; slides.forEach((s) => { starts.push(total); total += +s.dataset.dur; });
+const fit = () => { const k = Math.min(innerWidth / 1600, innerHeight / 900); stage.style.transform = `scale(${k}) translate(-50%,-50%)`; };
+addEventListener("resize", fit); fit();
+let cur = -1;
+function show(i) {
+  if (i === cur) return; cur = i;
+  slides.forEach((s, j) => s.classList.toggle("on", j === i));
+  stage.classList.toggle("dark", !!slides[i].dataset.dark);
+  // restart the slide's CSS animations
+  slides[i].querySelectorAll("*").forEach((e) => { e.style.animation = "none"; void e.offsetWidth; e.style.animation = ""; });
+}
+// Seek to any moment: the video renderer calls this frame by frame.
+window.renderAt = (t) => {
+  t = Math.max(0, Math.min(total - 0.001, t));
+  let i = starts.findIndex((s, j) => t >= s && t < s + +slides[j].dataset.dur);
+  show(i);
+  const local = (t - starts[i]) * 1000;
+  document.getAnimations().forEach((a) => { if (slides[i].contains(a.effect?.target)) { a.pause(); a.currentTime = local; } });
+  bar.style.width = (t / total) * 100 + "%";
+};
+window.TOTAL = total;
+const render = new URLSearchParams(location.search).has("render");
+if (render) { document.body.classList.add("render"); document.fonts.ready.then(() => renderAt(+new URLSearchParams(location.search).get("t") || 0)); }
+else {
+  let t = 0, last = performance.now(), paused = false;
+  const tick = (now) => { if (!paused) t += (now - last) / 1000; last = now; if (t >= total) t = 0;
+    const i = starts.findLastIndex((s) => t >= s); if (i !== cur) show(i); bar.style.width = (t / total) * 100 + "%"; requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+  addEventListener("keydown", (e) => {
+    if (e.key === " ") { paused = !paused; document.getAnimations().forEach((a) => (paused ? a.pause() : a.play())); }
+    if (e.key === "ArrowRight") t = starts[Math.min(cur + 1, slides.length - 1)];
+    if (e.key === "ArrowLeft") t = starts[Math.max(cur - 1, 0)];
+    if (e.key.toLowerCase() === "f") document.documentElement.requestFullscreen?.();
+  });
+  stage.onclick = () => (t = starts[Math.min(cur + 1, slides.length - 1)]);
+}
+</script>
+</body>
+</html>

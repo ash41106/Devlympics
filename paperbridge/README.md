@@ -46,3 +46,20 @@ If the laptop says no Hindi voice, the app shows exactly where to install one (W
 - **🔊 आज का सारांश** reads out the end-of-shift summary in Hindi.
 
 Toggle **🛡 Privacy** before projecting.
+
+## Pitch video and slides
+- **`kaagaz-pitch.mp4`**: 95-second 1080p explainer with on-screen captions (works with no sound). Play it on the projector before the live demo, or send it to judges.
+- **`/pitch.html`**: the same presentation, live in the browser. Auto-plays; **Space** pauses, **← →** changes slides, **F** goes fullscreen, click to skip ahead.
+- Rebuild after changes: `node tools/shots.js` (real screenshots from the running app), then `node tools/video.js` (needs `pip install imageio-ffmpeg`).
+
+### What to say over it (one speaker, ~95s)
+1. **Title:** "Kaagaz means paper. We built a bridge between India's village health workers and their doctors, made of the paper they already use."
+2. **The gap:** "A million ASHA workers write village health on paper. Doctors see it about three weeks later. And nothing ever goes back."
+3. **The bridge:** "One photo goes up. Help comes back down, in Hindi, by voice."
+4. **X-ray:** "Gemini reads the handwriting and shows *why* someone is urgent: BP 150 over 100 and swollen feet, glowing right on the page."
+5. **Asks back:** "If a detail is missing, the phone asks her out loud. She says yes, and the patient becomes urgent."
+6. **Doctor:** "A human always checks the AI against the original handwriting before acting."
+7. **Talks back:** "Her phone speaks the instruction, and the doctor's reply appears in ink on her own page."
+8. **Real villages:** "No data? It works by SMS. Can't write? She speaks. Offline? It syncs later."
+9. **The number:** "Twenty-one days, one way. Twenty-one seconds, both ways."
+10. **Close:** "Same paper. Same worker. Now the paper talks back."

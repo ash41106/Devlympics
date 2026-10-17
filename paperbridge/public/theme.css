@@ -165,3 +165,9 @@ body.stage .bridge svg text[opacity] { fill: var(--hl); opacity: .12; font-famil
 .stamp span { font-size: 12.5px; color: var(--dim); display: block; margin-bottom: 6px; }
 .no-hindi { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 1000; background: var(--text); color: #fff3cf; padding: 12px 40px 12px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.45; box-shadow: 4px 4px 0 var(--hl); }
 .no-hindi button { position: absolute; right: 8px; top: 8px; background: none; border: 0; color: #fff; font-size: 16px; cursor: pointer; }
+
+/* Patient popup: shares the .sheet class name with the hero illustration, so undo the tilted-paper styling here */
+.modal .sheet { height: auto !important; transform: none !important; overflow: auto !important; max-height: 92vh; width: min(620px, 100%);
+  background: var(--card) !important; border-radius: 16px !important; padding: 24px !important; }
+.modal { background: rgba(27,26,46,.55) !important; backdrop-filter: blur(3px); }
+.modal-help { font-size: 13.5px; line-height: 1.5; color: var(--dim); background: #fff3cf; border: 1.5px dashed var(--text); border-radius: 10px; padding: 8px 12px; margin: 8px 0 12px; }
