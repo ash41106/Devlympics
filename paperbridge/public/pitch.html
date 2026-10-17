@@ -72,6 +72,14 @@ h1 { font-size: 150px; } h2 { font-size: 72px; }
 .feat { padding: 18px; text-align: left; } .feat img { width: 100%; border-radius: 10px; border: 2px solid var(--ink); display: block; max-height: 300px; object-fit: cover; object-position: top; }
 .feat h4 { font: 900 26px Fraunces, serif; margin: 14px 0 6px; } .feat p { font-size: 19px; color: var(--dim); line-height: 1.4; }
 
+/* competitor slide */
+.comp { width: 100%; border-collapse: separate; border-spacing: 0 12px; margin-top: 20px; font-size: 24px; }
+.comp th { text-align: left; font: 700 20px Kalam, cursive; color: var(--red); padding: 0 18px; }
+.comp td { background: var(--card); border-top: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); padding: 14px 18px; vertical-align: middle; }
+.comp td:first-child { border-left: 2.5px solid var(--ink); border-radius: 14px 0 0 14px; width: 30%; } .comp td:last-child { border-right: 2.5px solid var(--ink); border-radius: 0 14px 14px 0; }
+.comp td small { display: block; font-size: 16px; color: var(--dim); } .comp td b { font-weight: 800; }
+.comp tr.us td { background: var(--hl); } .comp tr:not(.us) td:last-child b { color: var(--red); }
+
 /* S9 the number */
 .num { display: flex; justify-content: center; align-items: flex-end; gap: 110px; margin-top: 70px; text-align: center; }
 .num .old { font: 700 150px Kalam, cursive; color: #f28b82; position: relative; }
@@ -124,6 +132,19 @@ h1 { font-size: 150px; } h2 { font-size: 72px; }
     <div class="cap in d6"><span class="n">how</span>One photo goes up. <b>Help comes back down, in Hindi, by voice.</b> The bridge works both ways.</div>
   </section>
 
+  <section class="slide" data-dur="12">
+    <div class="kick in">Why hasn't this been solved?</div>
+    <h2 class="in d1" style="font-size:60px">Every tool so far <span class="hl">adds an app.</span></h2>
+    <table class="comp in d2">
+      <tr><th></th><th>What they do</th><th>The loophole</th></tr>
+      <tr><td><b>ANMOL · SAMASTA</b><small>Govt apps</small></td><td>Digital diary, 485 → 134 fields</td><td>Still typing. Paper never goes away, so <b>double work</b></td></tr>
+      <tr><td><b>Khushi Baby · CommCare</b><small>NGO platforms</small></td><td>Offline forms, NFC records</td><td>Worker becomes a <b>form filler</b>; data flows one way</td></tr>
+      <tr><td><b>Wadhwani AI · Doxper · Ninx</b><small>AI tools</small></td><td>Single-task AI, digital pens</td><td>Separate silos, special hardware, <b>nothing comes back</b></td></tr>
+      <tr class="us"><td><b>Kaagaz</b></td><td>Reads the paper she already keeps</td><td><b>0 new typing · two-way · FHIR into ABDM</b></td></tr>
+    </table>
+    <div class="cap in d4"><span class="n">our edge</span>Everyone builds a new app. We built <b>no new app for the worker and no new database for the government</b>: just the bridge between them.</div>
+  </section>
+
   <section class="slide" data-dur="10">
     <div class="split">
       <div><div class="kick in">Step 1 · Paper → AI</div><h2 class="in d1">The AI shows <span class="hl">why.</span></h2>
@@ -146,7 +167,7 @@ h1 { font-size: 150px; } h2 { font-size: 72px; }
   <section class="slide" data-dur="10">
     <div class="split" style="grid-template-columns:1fr 1fr">
       <div><div class="kick in">Step 3 · Doctor</div><h2 class="in d1">A human <span class="hl">always checks.</span></h2>
-        <p class="big in d2">The doctor sees the AI's reading <b>next to the original handwriting</b>, fixes anything wrong, then sends an instruction in one tap.</p></div>
+        <p class="big in d2">The doctor sees the AI's reading <b>next to the original handwriting</b>, fixes anything wrong, then sends <b>advice, never a prescription</b>. Every record exports as <b>FHIR R4 for ABDM</b>.</p></div>
       <div class="frame in d1" style="overflow:hidden"><img class="shot zoom" src="pitch/doctor-modal.png" alt="Doctor verifying the AI reading" style="max-height:690px" /></div>
     </div>
     <div class="cap in d3"><span class="n">trust</span>Unsure readings are <b>flagged for a human</b>. AI speeds the doctor up; it never decides alone.</div>
@@ -189,7 +210,7 @@ h1 { font-size: 150px; } h2 { font-size: 72px; }
       <div class="kick in">Kaagaz · कागज़</div>
       <h1 class="in d1">Same paper. Same worker.</h1>
       <h1 class="in d2"><span class="hl">Now the paper talks back.</span></h1>
-      <div class="chips in d3"><span>Gemini 2.5 Flash Vision</span><span>Node.js · zero dependencies</span><span>Web Speech · Hindi</span><span>Offline PWA</span><span>Open source</span></div>
+      <div class="chips in d3"><span>Gemini 2.5 Flash Vision</span><span>HL7 FHIR R4 · ABDM</span><span>Node.js · zero dependencies</span><span>Web Speech · Hindi</span><span>Offline PWA</span><span>Open source</span></div>
     </div>
     <div class="cap in d4"><span class="n">next</span>Any paper register (anganwadi, school, ration) can be bridged the same way. <b>No new hardware. No new habits.</b></div>
   </section>

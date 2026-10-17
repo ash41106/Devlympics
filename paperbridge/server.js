@@ -5,6 +5,7 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const FHIR = require("./fhir");
 
 const PORT = process.env.PORT || 3000;
 const KEY = process.env.GEMINI_API_KEY || "";
@@ -247,6 +248,20 @@ async function handle(req, res) {
       state.entries[i] = e;
       broadcast("update", e); broadcast("answer", { id, name: e.name, answer, risk: e.risk });
       return json(res, e);
+    }
+    // FHIR R4 export (ABDM / NRCeS-shaped): one document Bundle per patient, grouped per paper page.
+    if (url.pathname.startsWith("/api/fhir")) {
+      const id = url.searchParams.get("scan") || url.searchParams.get("entry");
+      const list = state.entries.filter((e) => !id || e.scanId === id || e.id === id);
+      if (!list.length) return json(res, { resourceType: "OperationOutcome", issue: [{ severity: "error", code: "not-found", diagnostics: "No records" }] }, 404);
+      const origin = `${req.socket.encrypted ? "https" : "http"}://${req.headers.host}`;
+      const docs = list.map((e) => FHIR.patientBundle([e], state.alerts, origin));
+      const problems = docs.flatMap(FHIR.check);
+      const out = docs.length === 1 && url.searchParams.get("entry") ? docs[0]
+        : { resourceType: "Bundle", type: "collection", timestamp: new Date().toISOString(), total: docs.length, entry: docs.map((d) => ({ fullUrl: `urn:uuid:${d.id}`, resource: d })) };
+      res.writeHead(problems.length ? 500 : 200, { "Content-Type": "application/fhir+json; charset=utf-8",
+        ...(url.searchParams.has("download") ? { "Content-Disposition": `attachment; filename="kaagaz-fhir-${id || "all"}.json"` } : {}) });
+      return res.end(JSON.stringify(problems.length ? { problems } : out, null, 2));
     }
     if (url.pathname === "/api/page") {
       const id = url.searchParams.get("scan");

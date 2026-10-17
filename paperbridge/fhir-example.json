@@ -1,0 +1,1705 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "timestamp": "2026-10-17T09:32:18.396Z",
+  "total": 5,
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:807d7e53-f377-4868-898e-85c238aec46c",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "807d7e53-f377-4868-898e-85c238aec46c",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+          ],
+          "lastUpdated": "2026-10-17T09:32:18.390Z"
+        },
+        "identifier": {
+          "system": "https://kaagaz.local/page",
+          "value": "fhirtest"
+        },
+        "type": "document",
+        "timestamp": "2026-10-17T09:32:18.390Z",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:482c1679-0ae3-42a8-bdf0-4323467ffb87",
+            "resource": {
+              "resourceType": "Composition",
+              "id": "482c1679-0ae3-42a8-bdf0-4323467ffb87",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord"
+                ]
+              },
+              "status": "final",
+              "type": {
+                "text": "Wellness Record"
+              },
+              "subject": {
+                "reference": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5"
+              },
+              "date": "2026-10-17T09:32:18.390Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                },
+                {
+                  "reference": "urn:uuid:c69def9e-40d6-46d1-83e5-647961373aea"
+                }
+              ],
+              "title": "ASHA home-visit register page (digitised from paper)",
+              "custodian": {
+                "reference": "urn:uuid:c69def9e-40d6-46d1-83e5-647961373aea"
+              },
+              "section": [
+                {
+                  "title": "Sunita Devi · Rampur",
+                  "entry": [
+                    {
+                      "reference": "urn:uuid:9c5e161f-3ccb-4557-85d5-b386c1f9530f"
+                    },
+                    {
+                      "reference": "urn:uuid:26b9771d-1cfe-4900-aa77-5aea1c2e538e"
+                    },
+                    {
+                      "reference": "urn:uuid:36893b55-3a81-4049-befd-dc1931978d86"
+                    },
+                    {
+                      "reference": "urn:uuid:5b019ce7-62d7-4537-8c59-c710edf66a70"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:c69def9e-40d6-46d1-83e5-647961373aea",
+            "resource": {
+              "resourceType": "Organization",
+              "id": "c69def9e-40d6-46d1-83e5-647961373aea",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+                ]
+              },
+              "name": "Sonpur Block PHC (Kaagaz pilot)"
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6",
+            "resource": {
+              "resourceType": "Practitioner",
+              "id": "e287adcd-2e73-4c94-a3d1-3f4f500bf6f6",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+                ]
+              },
+              "name": [
+                {
+                  "text": "ASHA Meena"
+                }
+              ],
+              "qualification": [
+                {
+                  "code": {
+                    "text": "Accredited Social Health Activist (ASHA)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:cef06254-5868-475a-8414-adf905e3fd8b",
+            "resource": {
+              "resourceType": "DocumentReference",
+              "id": "cef06254-5868-475a-8414-adf905e3fd8b",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+                ]
+              },
+              "status": "current",
+              "type": {
+                "text": "Handwritten ASHA register page (photo)"
+              },
+              "date": "2026-10-17T09:32:18.378Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                }
+              ],
+              "content": [
+                {
+                  "attachment": {
+                    "contentType": "image/png",
+                    "url": "http://localhost:3140/sample1.png",
+                    "title": "Original paper page"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5",
+            "resource": {
+              "resourceType": "Patient",
+              "id": "591b0445-d3ab-4be0-aed9-fc5d91065ed5",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+                ]
+              },
+              "name": [
+                {
+                  "text": "Sunita Devi"
+                }
+              ],
+              "gender": "female",
+              "address": [
+                {
+                  "text": "Rampur",
+                  "district": "Sonpur"
+                }
+              ],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/patient-age",
+                  "valueAge": {
+                    "value": 24,
+                    "unit": "a",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "a"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:9c5e161f-3ccb-4557-85d5-b386c1f9530f",
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "9c5e161f-3ccb-4557-85d5-b386c1f9530f",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+                ]
+              },
+              "status": "finished",
+              "class": {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                "code": "HH",
+                "display": "home health"
+              },
+              "subject": {
+                "reference": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5"
+              },
+              "participant": [
+                {
+                  "individual": {
+                    "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                  }
+                }
+              ],
+              "period": {
+                "start": "2026-10-17T09:32:18.378Z"
+              },
+              "reasonCode": [
+                {
+                  "text": "pregnancy"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:26b9771d-1cfe-4900-aa77-5aea1c2e538e",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "26b9771d-1cfe-4900-aa77-5aea1c2e538e",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+                ]
+              },
+              "status": "final",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "85354-9",
+                    "display": "Blood pressure panel"
+                  }
+                ],
+                "text": "Blood pressure panel"
+              },
+              "subject": {
+                "reference": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5"
+              },
+              "encounter": {
+                "reference": "urn:uuid:9c5e161f-3ccb-4557-85d5-b386c1f9530f"
+              },
+              "effectiveDateTime": "2026-10-17T09:32:18.378Z",
+              "performer": [
+                {
+                  "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                }
+              ],
+              "component": [
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://loinc.org",
+                        "code": "8480-6",
+                        "display": "Systolic blood pressure"
+                      }
+                    ]
+                  },
+                  "valueQuantity": {
+                    "value": 150,
+                    "unit": "mm[Hg]",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "mm[Hg]"
+                  }
+                },
+                {
+                  "code": {
+                    "coding": [
+                      {
+                        "system": "http://loinc.org",
+                        "code": "8462-4",
+                        "display": "Diastolic blood pressure"
+                      }
+                    ]
+                  },
+                  "valueQuantity": {
+                    "value": 100,
+                    "unit": "mm[Hg]",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "mm[Hg]"
+                  }
+                }
+              ],
+              "derivedFrom": [
+                {
+                  "reference": "urn:uuid:cef06254-5868-475a-8414-adf905e3fd8b"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:36893b55-3a81-4049-befd-dc1931978d86",
+            "resource": {
+              "resourceType": "RiskAssessment",
+              "id": "36893b55-3a81-4049-befd-dc1931978d86",
+              "status": "final",
+              "subject": {
+                "reference": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5"
+              },
+              "encounter": {
+                "reference": "urn:uuid:9c5e161f-3ccb-4557-85d5-b386c1f9530f"
+              },
+              "occurrenceDateTime": "2026-10-17T09:32:18.378Z",
+              "basis": [
+                {
+                  "reference": "urn:uuid:26b9771d-1cfe-4900-aa77-5aea1c2e538e"
+                }
+              ],
+              "prediction": [
+                {
+                  "outcome": {
+                    "text": "Possible pre-eclampsia: high BP with swelling"
+                  },
+                  "qualitativeRisk": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/risk-probability",
+                        "code": "high"
+                      }
+                    ],
+                    "text": "High"
+                  }
+                }
+              ],
+              "note": [
+                {
+                  "text": "Evidence on paper: \"pair me sujan\", \"BP 150/100 !!\" · AI confidence 93%"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:d678b499-f765-475d-8f27-4b1548dfb854",
+            "resource": {
+              "resourceType": "Provenance",
+              "id": "d678b499-f765-475d-8f27-4b1548dfb854",
+              "target": [
+                {
+                  "reference": "urn:uuid:26b9771d-1cfe-4900-aa77-5aea1c2e538e"
+                },
+                {
+                  "reference": "urn:uuid:36893b55-3a81-4049-befd-dc1931978d86"
+                }
+              ],
+              "recorded": "2026-10-17T09:32:18.390Z",
+              "agent": [
+                {
+                  "type": {
+                    "text": "author"
+                  },
+                  "who": {
+                    "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "assembler"
+                  },
+                  "who": {
+                    "display": "Kaagaz · Gemini Vision handwriting extraction"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "verifier"
+                  },
+                  "who": {
+                    "display": "District doctor"
+                  }
+                }
+              ],
+              "entity": [
+                {
+                  "role": "source",
+                  "what": {
+                    "reference": "urn:uuid:cef06254-5868-475a-8414-adf905e3fd8b"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:5b019ce7-62d7-4537-8c59-c710edf66a70",
+            "resource": {
+              "resourceType": "Communication",
+              "id": "5b019ce7-62d7-4537-8c59-c710edf66a70",
+              "status": "completed",
+              "category": [
+                {
+                  "text": "Advice / referral to frontline worker (not a prescription)"
+                }
+              ],
+              "subject": {
+                "reference": "urn:uuid:591b0445-d3ab-4be0-aed9-fc5d91065ed5"
+              },
+              "encounter": {
+                "reference": "urn:uuid:9c5e161f-3ccb-4557-85d5-b386c1f9530f"
+              },
+              "sent": "2026-10-17T09:32:18.385Z",
+              "recipient": [
+                {
+                  "reference": "urn:uuid:e287adcd-2e73-4c94-a3d1-3f4f500bf6f6"
+                }
+              ],
+              "payload": [
+                {
+                  "contentString": "सुनीता जी को आज ही PHC ले जाएँ। BP की जाँच ज़रूरी है।"
+                },
+                {
+                  "contentString": "ASHA reply: हाँ, अभी जा रही हूँ"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a1021f4e-7b14-4910-b84c-93f717673bd5",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "a1021f4e-7b14-4910-b84c-93f717673bd5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+          ],
+          "lastUpdated": "2026-10-17T09:32:18.394Z"
+        },
+        "identifier": {
+          "system": "https://kaagaz.local/page",
+          "value": "fhirtest"
+        },
+        "type": "document",
+        "timestamp": "2026-10-17T09:32:18.394Z",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:f2789ba3-00a2-4601-979c-fb84126c48e1",
+            "resource": {
+              "resourceType": "Composition",
+              "id": "f2789ba3-00a2-4601-979c-fb84126c48e1",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord"
+                ]
+              },
+              "status": "preliminary",
+              "type": {
+                "text": "Wellness Record"
+              },
+              "subject": {
+                "reference": "urn:uuid:fb6d0014-8291-47c7-907d-06c1b2313b45"
+              },
+              "date": "2026-10-17T09:32:18.394Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:7d5e0964-dc20-4702-b361-0ca3ff33c59e"
+                },
+                {
+                  "reference": "urn:uuid:3ead2ddf-0e70-4259-ac25-cbfe2804997d"
+                }
+              ],
+              "title": "ASHA home-visit register page (digitised from paper)",
+              "custodian": {
+                "reference": "urn:uuid:3ead2ddf-0e70-4259-ac25-cbfe2804997d"
+              },
+              "section": [
+                {
+                  "title": "Aarav Kumar · Rampur",
+                  "entry": [
+                    {
+                      "reference": "urn:uuid:e82811e0-a291-4ca6-a4ad-80eaf0d9722a"
+                    },
+                    {
+                      "reference": "urn:uuid:34b97701-f15b-4c5c-b1f3-d969cf608210"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:3ead2ddf-0e70-4259-ac25-cbfe2804997d",
+            "resource": {
+              "resourceType": "Organization",
+              "id": "3ead2ddf-0e70-4259-ac25-cbfe2804997d",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+                ]
+              },
+              "name": "Sonpur Block PHC (Kaagaz pilot)"
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:7d5e0964-dc20-4702-b361-0ca3ff33c59e",
+            "resource": {
+              "resourceType": "Practitioner",
+              "id": "7d5e0964-dc20-4702-b361-0ca3ff33c59e",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+                ]
+              },
+              "name": [
+                {
+                  "text": "ASHA Meena"
+                }
+              ],
+              "qualification": [
+                {
+                  "code": {
+                    "text": "Accredited Social Health Activist (ASHA)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:f06b415b-4cf1-42a0-95cc-20d403644a42",
+            "resource": {
+              "resourceType": "DocumentReference",
+              "id": "f06b415b-4cf1-42a0-95cc-20d403644a42",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+                ]
+              },
+              "status": "current",
+              "type": {
+                "text": "Handwritten ASHA register page (photo)"
+              },
+              "date": "2026-10-17T09:32:18.378Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:7d5e0964-dc20-4702-b361-0ca3ff33c59e"
+                }
+              ],
+              "content": [
+                {
+                  "attachment": {
+                    "contentType": "image/png",
+                    "url": "http://localhost:3140/sample1.png",
+                    "title": "Original paper page"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:fb6d0014-8291-47c7-907d-06c1b2313b45",
+            "resource": {
+              "resourceType": "Patient",
+              "id": "fb6d0014-8291-47c7-907d-06c1b2313b45",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+                ]
+              },
+              "name": [
+                {
+                  "text": "Aarav Kumar"
+                }
+              ],
+              "gender": "male",
+              "address": [
+                {
+                  "text": "Rampur",
+                  "district": "Sonpur"
+                }
+              ],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/patient-age",
+                  "valueAge": {
+                    "value": 1,
+                    "unit": "a",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "a"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:e82811e0-a291-4ca6-a4ad-80eaf0d9722a",
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "e82811e0-a291-4ca6-a4ad-80eaf0d9722a",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+                ]
+              },
+              "status": "finished",
+              "class": {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                "code": "HH",
+                "display": "home health"
+              },
+              "subject": {
+                "reference": "urn:uuid:fb6d0014-8291-47c7-907d-06c1b2313b45"
+              },
+              "participant": [
+                {
+                  "individual": {
+                    "reference": "urn:uuid:7d5e0964-dc20-4702-b361-0ca3ff33c59e"
+                  }
+                }
+              ],
+              "period": {
+                "start": "2026-10-17T09:32:18.378Z"
+              },
+              "reasonCode": [
+                {
+                  "text": "vaccination"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:34b97701-f15b-4c5c-b1f3-d969cf608210",
+            "resource": {
+              "resourceType": "RiskAssessment",
+              "id": "34b97701-f15b-4c5c-b1f3-d969cf608210",
+              "status": "preliminary",
+              "subject": {
+                "reference": "urn:uuid:fb6d0014-8291-47c7-907d-06c1b2313b45"
+              },
+              "encounter": {
+                "reference": "urn:uuid:e82811e0-a291-4ca6-a4ad-80eaf0d9722a"
+              },
+              "occurrenceDateTime": "2026-10-17T09:32:18.378Z",
+              "basis": [],
+              "prediction": [
+                {
+                  "outcome": {
+                    "text": "Missed DPT-2 dose"
+                  },
+                  "qualitativeRisk": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/risk-probability",
+                        "code": "high"
+                      }
+                    ],
+                    "text": "High"
+                  }
+                }
+              ],
+              "note": [
+                {
+                  "text": "Evidence on paper: \"DPT-2 tika baki\" · AI confidence 93%"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:789ece64-b3bb-47b3-a618-80f4017893cc",
+            "resource": {
+              "resourceType": "Provenance",
+              "id": "789ece64-b3bb-47b3-a618-80f4017893cc",
+              "target": [
+                {
+                  "reference": "urn:uuid:34b97701-f15b-4c5c-b1f3-d969cf608210"
+                }
+              ],
+              "recorded": "2026-10-17T09:32:18.394Z",
+              "agent": [
+                {
+                  "type": {
+                    "text": "author"
+                  },
+                  "who": {
+                    "reference": "urn:uuid:7d5e0964-dc20-4702-b361-0ca3ff33c59e"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "assembler"
+                  },
+                  "who": {
+                    "display": "Kaagaz · Gemini Vision handwriting extraction"
+                  }
+                }
+              ],
+              "entity": [
+                {
+                  "role": "source",
+                  "what": {
+                    "reference": "urn:uuid:f06b415b-4cf1-42a0-95cc-20d403644a42"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:32e935e4-f4ce-4d1d-9a9d-dba4d9c9891f",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "32e935e4-f4ce-4d1d-9a9d-dba4d9c9891f",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+          ],
+          "lastUpdated": "2026-10-17T09:32:18.395Z"
+        },
+        "identifier": {
+          "system": "https://kaagaz.local/page",
+          "value": "fhirtest"
+        },
+        "type": "document",
+        "timestamp": "2026-10-17T09:32:18.395Z",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:496b0321-6066-41e4-960c-713c42f34f6e",
+            "resource": {
+              "resourceType": "Composition",
+              "id": "496b0321-6066-41e4-960c-713c42f34f6e",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord"
+                ]
+              },
+              "status": "preliminary",
+              "type": {
+                "text": "Wellness Record"
+              },
+              "subject": {
+                "reference": "urn:uuid:f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf"
+              },
+              "date": "2026-10-17T09:32:18.395Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c"
+                },
+                {
+                  "reference": "urn:uuid:10a9e20e-f13b-444b-80fc-7125c78ecf64"
+                }
+              ],
+              "title": "ASHA home-visit register page (digitised from paper)",
+              "custodian": {
+                "reference": "urn:uuid:10a9e20e-f13b-444b-80fc-7125c78ecf64"
+              },
+              "section": [
+                {
+                  "title": "Ramesh Yadav · Sonpur",
+                  "entry": [
+                    {
+                      "reference": "urn:uuid:0db767e8-af2d-48ec-93d8-28c5a42db002"
+                    },
+                    {
+                      "reference": "urn:uuid:cac0a747-63f7-4a2f-86ff-40608a2cdb8a"
+                    },
+                    {
+                      "reference": "urn:uuid:1575a817-a008-4c83-a276-73dfc4c2e14e"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:10a9e20e-f13b-444b-80fc-7125c78ecf64",
+            "resource": {
+              "resourceType": "Organization",
+              "id": "10a9e20e-f13b-444b-80fc-7125c78ecf64",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+                ]
+              },
+              "name": "Sonpur Block PHC (Kaagaz pilot)"
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c",
+            "resource": {
+              "resourceType": "Practitioner",
+              "id": "b6d84cf0-35a6-4758-a975-42c422ea0e6c",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+                ]
+              },
+              "name": [
+                {
+                  "text": "ASHA Meena"
+                }
+              ],
+              "qualification": [
+                {
+                  "code": {
+                    "text": "Accredited Social Health Activist (ASHA)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:ceb1805a-6878-4bc5-9b5a-b5152ce28245",
+            "resource": {
+              "resourceType": "DocumentReference",
+              "id": "ceb1805a-6878-4bc5-9b5a-b5152ce28245",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+                ]
+              },
+              "status": "current",
+              "type": {
+                "text": "Handwritten ASHA register page (photo)"
+              },
+              "date": "2026-10-17T09:32:18.378Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c"
+                }
+              ],
+              "content": [
+                {
+                  "attachment": {
+                    "contentType": "image/png",
+                    "url": "http://localhost:3140/sample1.png",
+                    "title": "Original paper page"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf",
+            "resource": {
+              "resourceType": "Patient",
+              "id": "f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+                ]
+              },
+              "name": [
+                {
+                  "text": "Ramesh Yadav"
+                }
+              ],
+              "gender": "male",
+              "address": [
+                {
+                  "text": "Sonpur",
+                  "district": "Sonpur"
+                }
+              ],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/patient-age",
+                  "valueAge": {
+                    "value": 52,
+                    "unit": "a",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "a"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:0db767e8-af2d-48ec-93d8-28c5a42db002",
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "0db767e8-af2d-48ec-93d8-28c5a42db002",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+                ]
+              },
+              "status": "finished",
+              "class": {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                "code": "HH",
+                "display": "home health"
+              },
+              "subject": {
+                "reference": "urn:uuid:f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf"
+              },
+              "participant": [
+                {
+                  "individual": {
+                    "reference": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c"
+                  }
+                }
+              ],
+              "period": {
+                "start": "2026-10-17T09:32:18.378Z"
+              },
+              "reasonCode": [
+                {
+                  "text": "fever"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:cac0a747-63f7-4a2f-86ff-40608a2cdb8a",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "cac0a747-63f7-4a2f-86ff-40608a2cdb8a",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+                ]
+              },
+              "status": "preliminary",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "386661006",
+                    "display": "Fever"
+                  }
+                ],
+                "text": "Fever"
+              },
+              "subject": {
+                "reference": "urn:uuid:f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf"
+              },
+              "encounter": {
+                "reference": "urn:uuid:0db767e8-af2d-48ec-93d8-28c5a42db002"
+              },
+              "effectiveDateTime": "2026-10-17T09:32:18.378Z",
+              "performer": [
+                {
+                  "reference": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c"
+                }
+              ],
+              "valueQuantity": {
+                "value": 4,
+                "unit": "d",
+                "system": "http://unitsofmeasure.org",
+                "code": "d"
+              },
+              "derivedFrom": [
+                {
+                  "reference": "urn:uuid:ceb1805a-6878-4bc5-9b5a-b5152ce28245"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:1575a817-a008-4c83-a276-73dfc4c2e14e",
+            "resource": {
+              "resourceType": "RiskAssessment",
+              "id": "1575a817-a008-4c83-a276-73dfc4c2e14e",
+              "status": "preliminary",
+              "subject": {
+                "reference": "urn:uuid:f4f4c57e-58eb-42f4-8ae9-ad8e7b6371cf"
+              },
+              "encounter": {
+                "reference": "urn:uuid:0db767e8-af2d-48ec-93d8-28c5a42db002"
+              },
+              "occurrenceDateTime": "2026-10-17T09:32:18.378Z",
+              "basis": [
+                {
+                  "reference": "urn:uuid:cac0a747-63f7-4a2f-86ff-40608a2cdb8a"
+                }
+              ],
+              "prediction": [
+                {
+                  "outcome": {
+                    "text": "Fever >3 days: test for malaria/dengue"
+                  },
+                  "qualitativeRisk": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/risk-probability",
+                        "code": "moderate"
+                      }
+                    ],
+                    "text": "Medium"
+                  }
+                }
+              ],
+              "note": [
+                {
+                  "text": "Evidence on paper: \"bukhar 4 din\" · AI confidence 93%"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:f15209b9-2266-4034-be2e-775b5d061f72",
+            "resource": {
+              "resourceType": "Provenance",
+              "id": "f15209b9-2266-4034-be2e-775b5d061f72",
+              "target": [
+                {
+                  "reference": "urn:uuid:cac0a747-63f7-4a2f-86ff-40608a2cdb8a"
+                },
+                {
+                  "reference": "urn:uuid:1575a817-a008-4c83-a276-73dfc4c2e14e"
+                }
+              ],
+              "recorded": "2026-10-17T09:32:18.395Z",
+              "agent": [
+                {
+                  "type": {
+                    "text": "author"
+                  },
+                  "who": {
+                    "reference": "urn:uuid:b6d84cf0-35a6-4758-a975-42c422ea0e6c"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "assembler"
+                  },
+                  "who": {
+                    "display": "Kaagaz · Gemini Vision handwriting extraction"
+                  }
+                }
+              ],
+              "entity": [
+                {
+                  "role": "source",
+                  "what": {
+                    "reference": "urn:uuid:ceb1805a-6878-4bc5-9b5a-b5152ce28245"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d5f84ce5-0541-4199-9e32-cd56ccce8a81",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "d5f84ce5-0541-4199-9e32-cd56ccce8a81",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+          ],
+          "lastUpdated": "2026-10-17T09:32:18.395Z"
+        },
+        "identifier": {
+          "system": "https://kaagaz.local/page",
+          "value": "fhirtest"
+        },
+        "type": "document",
+        "timestamp": "2026-10-17T09:32:18.395Z",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:abe2ee86-e451-4acc-8c40-71b7b52a2e9f",
+            "resource": {
+              "resourceType": "Composition",
+              "id": "abe2ee86-e451-4acc-8c40-71b7b52a2e9f",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord"
+                ]
+              },
+              "status": "preliminary",
+              "type": {
+                "text": "Wellness Record"
+              },
+              "subject": {
+                "reference": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb"
+              },
+              "date": "2026-10-17T09:32:18.395Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                },
+                {
+                  "reference": "urn:uuid:3bd59204-9884-4348-b49f-ed6afe1d5c3d"
+                }
+              ],
+              "title": "ASHA home-visit register page (digitised from paper)",
+              "custodian": {
+                "reference": "urn:uuid:3bd59204-9884-4348-b49f-ed6afe1d5c3d"
+              },
+              "section": [
+                {
+                  "title": "Pooja · Kheda",
+                  "entry": [
+                    {
+                      "reference": "urn:uuid:8750ca93-e2e3-4aaa-b147-d3d93d443bbb"
+                    },
+                    {
+                      "reference": "urn:uuid:0fcded46-5864-474c-857b-77f5dde546bd"
+                    },
+                    {
+                      "reference": "urn:uuid:909baacb-1152-4be2-99af-f64544a612ba"
+                    },
+                    {
+                      "reference": "urn:uuid:0ccbade7-aaf6-4024-9cee-30db4195977d"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:3bd59204-9884-4348-b49f-ed6afe1d5c3d",
+            "resource": {
+              "resourceType": "Organization",
+              "id": "3bd59204-9884-4348-b49f-ed6afe1d5c3d",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+                ]
+              },
+              "name": "Sonpur Block PHC (Kaagaz pilot)"
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4",
+            "resource": {
+              "resourceType": "Practitioner",
+              "id": "9752e111-00a1-492c-858c-53122363a5d4",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+                ]
+              },
+              "name": [
+                {
+                  "text": "ASHA Meena"
+                }
+              ],
+              "qualification": [
+                {
+                  "code": {
+                    "text": "Accredited Social Health Activist (ASHA)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:6512c290-c4c9-4165-988f-a91e91ce9af2",
+            "resource": {
+              "resourceType": "DocumentReference",
+              "id": "6512c290-c4c9-4165-988f-a91e91ce9af2",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+                ]
+              },
+              "status": "current",
+              "type": {
+                "text": "Handwritten ASHA register page (photo)"
+              },
+              "date": "2026-10-17T09:32:18.378Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                }
+              ],
+              "content": [
+                {
+                  "attachment": {
+                    "contentType": "image/png",
+                    "url": "http://localhost:3140/sample1.png",
+                    "title": "Original paper page"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb",
+            "resource": {
+              "resourceType": "Patient",
+              "id": "94d82c84-f166-48c6-89fd-f95daa1206bb",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+                ]
+              },
+              "name": [
+                {
+                  "text": "Pooja"
+                }
+              ],
+              "gender": "female",
+              "address": [
+                {
+                  "text": "Kheda",
+                  "district": "Sonpur"
+                }
+              ],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/patient-age",
+                  "valueAge": {
+                    "value": 3,
+                    "unit": "a",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "a"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:8750ca93-e2e3-4aaa-b147-d3d93d443bbb",
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "8750ca93-e2e3-4aaa-b147-d3d93d443bbb",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+                ]
+              },
+              "status": "finished",
+              "class": {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                "code": "HH",
+                "display": "home health"
+              },
+              "subject": {
+                "reference": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb"
+              },
+              "participant": [
+                {
+                  "individual": {
+                    "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                  }
+                }
+              ],
+              "period": {
+                "start": "2026-10-17T09:32:18.378Z"
+              },
+              "reasonCode": [
+                {
+                  "text": "nutrition"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:0fcded46-5864-474c-857b-77f5dde546bd",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "0fcded46-5864-474c-857b-77f5dde546bd",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+                ]
+              },
+              "status": "preliminary",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "29463-7",
+                    "display": "Body weight"
+                  }
+                ],
+                "text": "Body weight"
+              },
+              "subject": {
+                "reference": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb"
+              },
+              "encounter": {
+                "reference": "urn:uuid:8750ca93-e2e3-4aaa-b147-d3d93d443bbb"
+              },
+              "effectiveDateTime": "2026-10-17T09:32:18.378Z",
+              "performer": [
+                {
+                  "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                }
+              ],
+              "valueQuantity": {
+                "value": 9.1,
+                "unit": "kg",
+                "system": "http://unitsofmeasure.org",
+                "code": "kg"
+              },
+              "derivedFrom": [
+                {
+                  "reference": "urn:uuid:6512c290-c4c9-4165-988f-a91e91ce9af2"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:909baacb-1152-4be2-99af-f64544a612ba",
+            "resource": {
+              "resourceType": "Observation",
+              "id": "909baacb-1152-4be2-99af-f64544a612ba",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+                ]
+              },
+              "status": "preliminary",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "56072-2",
+                    "display": "Circumference Mid upper arm - left"
+                  }
+                ],
+                "text": "Circumference Mid upper arm - left"
+              },
+              "subject": {
+                "reference": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb"
+              },
+              "encounter": {
+                "reference": "urn:uuid:8750ca93-e2e3-4aaa-b147-d3d93d443bbb"
+              },
+              "effectiveDateTime": "2026-10-17T09:32:18.378Z",
+              "performer": [
+                {
+                  "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                }
+              ],
+              "valueString": "MUAC tape red (<11.5 cm)",
+              "derivedFrom": [
+                {
+                  "reference": "urn:uuid:6512c290-c4c9-4165-988f-a91e91ce9af2"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:0ccbade7-aaf6-4024-9cee-30db4195977d",
+            "resource": {
+              "resourceType": "RiskAssessment",
+              "id": "0ccbade7-aaf6-4024-9cee-30db4195977d",
+              "status": "preliminary",
+              "subject": {
+                "reference": "urn:uuid:94d82c84-f166-48c6-89fd-f95daa1206bb"
+              },
+              "encounter": {
+                "reference": "urn:uuid:8750ca93-e2e3-4aaa-b147-d3d93d443bbb"
+              },
+              "occurrenceDateTime": "2026-10-17T09:32:18.378Z",
+              "basis": [
+                {
+                  "reference": "urn:uuid:0fcded46-5864-474c-857b-77f5dde546bd"
+                },
+                {
+                  "reference": "urn:uuid:909baacb-1152-4be2-99af-f64544a612ba"
+                }
+              ],
+              "prediction": [
+                {
+                  "outcome": {
+                    "text": "Severe acute malnutrition (MUAC red)"
+                  },
+                  "qualitativeRisk": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/risk-probability",
+                        "code": "high"
+                      }
+                    ],
+                    "text": "High"
+                  }
+                }
+              ],
+              "note": [
+                {
+                  "text": "Evidence on paper: \"MUAC laal\" · AI confidence 64%"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:82357652-14a9-412a-85aa-9bc66676d608",
+            "resource": {
+              "resourceType": "Provenance",
+              "id": "82357652-14a9-412a-85aa-9bc66676d608",
+              "target": [
+                {
+                  "reference": "urn:uuid:0fcded46-5864-474c-857b-77f5dde546bd"
+                },
+                {
+                  "reference": "urn:uuid:909baacb-1152-4be2-99af-f64544a612ba"
+                },
+                {
+                  "reference": "urn:uuid:0ccbade7-aaf6-4024-9cee-30db4195977d"
+                }
+              ],
+              "recorded": "2026-10-17T09:32:18.395Z",
+              "agent": [
+                {
+                  "type": {
+                    "text": "author"
+                  },
+                  "who": {
+                    "reference": "urn:uuid:9752e111-00a1-492c-858c-53122363a5d4"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "assembler"
+                  },
+                  "who": {
+                    "display": "Kaagaz · Gemini Vision handwriting extraction"
+                  }
+                }
+              ],
+              "entity": [
+                {
+                  "role": "source",
+                  "what": {
+                    "reference": "urn:uuid:6512c290-c4c9-4165-988f-a91e91ce9af2"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:005f5951-4fe5-4059-ba58-f93c9e6a4705",
+      "resource": {
+        "resourceType": "Bundle",
+        "id": "005f5951-4fe5-4059-ba58-f93c9e6a4705",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+          ],
+          "lastUpdated": "2026-10-17T09:32:18.396Z"
+        },
+        "identifier": {
+          "system": "https://kaagaz.local/page",
+          "value": "fhirtest"
+        },
+        "type": "document",
+        "timestamp": "2026-10-17T09:32:18.396Z",
+        "entry": [
+          {
+            "fullUrl": "urn:uuid:1c79479e-bc33-49ca-9e2e-2ba49e96e9f3",
+            "resource": {
+              "resourceType": "Composition",
+              "id": "1c79479e-bc33-49ca-9e2e-2ba49e96e9f3",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord"
+                ]
+              },
+              "status": "preliminary",
+              "type": {
+                "text": "Wellness Record"
+              },
+              "subject": {
+                "reference": "urn:uuid:83849706-32bc-4585-b282-e08398839937"
+              },
+              "date": "2026-10-17T09:32:18.396Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:e768d137-b1e3-4c15-a691-216757af11c7"
+                },
+                {
+                  "reference": "urn:uuid:a36603ba-e38e-48ec-a775-7d8c66c830a5"
+                }
+              ],
+              "title": "ASHA home-visit register page (digitised from paper)",
+              "custodian": {
+                "reference": "urn:uuid:a36603ba-e38e-48ec-a775-7d8c66c830a5"
+              },
+              "section": [
+                {
+                  "title": "Kamla Bai · Sonpur",
+                  "entry": [
+                    {
+                      "reference": "urn:uuid:0729699b-480d-47aa-860e-28c03d57ba7c"
+                    },
+                    {
+                      "reference": "urn:uuid:73094a77-84fa-4397-8aa3-65adda08ceee"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:a36603ba-e38e-48ec-a775-7d8c66c830a5",
+            "resource": {
+              "resourceType": "Organization",
+              "id": "a36603ba-e38e-48ec-a775-7d8c66c830a5",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+                ]
+              },
+              "name": "Sonpur Block PHC (Kaagaz pilot)"
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:e768d137-b1e3-4c15-a691-216757af11c7",
+            "resource": {
+              "resourceType": "Practitioner",
+              "id": "e768d137-b1e3-4c15-a691-216757af11c7",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+                ]
+              },
+              "name": [
+                {
+                  "text": "ASHA Meena"
+                }
+              ],
+              "qualification": [
+                {
+                  "code": {
+                    "text": "Accredited Social Health Activist (ASHA)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:833b6a4b-33f0-4656-9486-33f8b859899d",
+            "resource": {
+              "resourceType": "DocumentReference",
+              "id": "833b6a4b-33f0-4656-9486-33f8b859899d",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+                ]
+              },
+              "status": "current",
+              "type": {
+                "text": "Handwritten ASHA register page (photo)"
+              },
+              "date": "2026-10-17T09:32:18.378Z",
+              "author": [
+                {
+                  "reference": "urn:uuid:e768d137-b1e3-4c15-a691-216757af11c7"
+                }
+              ],
+              "content": [
+                {
+                  "attachment": {
+                    "contentType": "image/png",
+                    "url": "http://localhost:3140/sample1.png",
+                    "title": "Original paper page"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:83849706-32bc-4585-b282-e08398839937",
+            "resource": {
+              "resourceType": "Patient",
+              "id": "83849706-32bc-4585-b282-e08398839937",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+                ]
+              },
+              "name": [
+                {
+                  "text": "Kamla Bai"
+                }
+              ],
+              "gender": "female",
+              "address": [
+                {
+                  "text": "Sonpur",
+                  "district": "Sonpur"
+                }
+              ],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/patient-age",
+                  "valueAge": {
+                    "value": 31,
+                    "unit": "a",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "a"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:0729699b-480d-47aa-860e-28c03d57ba7c",
+            "resource": {
+              "resourceType": "Encounter",
+              "id": "0729699b-480d-47aa-860e-28c03d57ba7c",
+              "meta": {
+                "profile": [
+                  "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+                ]
+              },
+              "status": "finished",
+              "class": {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                "code": "HH",
+                "display": "home health"
+              },
+              "subject": {
+                "reference": "urn:uuid:83849706-32bc-4585-b282-e08398839937"
+              },
+              "participant": [
+                {
+                  "individual": {
+                    "reference": "urn:uuid:e768d137-b1e3-4c15-a691-216757af11c7"
+                  }
+                }
+              ],
+              "period": {
+                "start": "2026-10-17T09:32:18.378Z"
+              },
+              "reasonCode": [
+                {
+                  "text": "other"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:73094a77-84fa-4397-8aa3-65adda08ceee",
+            "resource": {
+              "resourceType": "RiskAssessment",
+              "id": "73094a77-84fa-4397-8aa3-65adda08ceee",
+              "status": "preliminary",
+              "subject": {
+                "reference": "urn:uuid:83849706-32bc-4585-b282-e08398839937"
+              },
+              "encounter": {
+                "reference": "urn:uuid:0729699b-480d-47aa-860e-28c03d57ba7c"
+              },
+              "occurrenceDateTime": "2026-10-17T09:32:18.378Z",
+              "basis": [],
+              "prediction": [
+                {
+                  "outcome": {
+                    "text": "No danger signs"
+                  },
+                  "qualitativeRisk": {
+                    "coding": [
+                      {
+                        "system": "http://terminology.hl7.org/CodeSystem/risk-probability",
+                        "code": "low"
+                      }
+                    ],
+                    "text": "Low"
+                  }
+                }
+              ],
+              "note": [
+                {
+                  "text": "Evidence on paper: none · AI confidence 93%"
+                }
+              ]
+            }
+          },
+          {
+            "fullUrl": "urn:uuid:46bf27d1-723a-4a99-9342-767552cdb63b",
+            "resource": {
+              "resourceType": "Provenance",
+              "id": "46bf27d1-723a-4a99-9342-767552cdb63b",
+              "target": [
+                {
+                  "reference": "urn:uuid:73094a77-84fa-4397-8aa3-65adda08ceee"
+                }
+              ],
+              "recorded": "2026-10-17T09:32:18.396Z",
+              "agent": [
+                {
+                  "type": {
+                    "text": "author"
+                  },
+                  "who": {
+                    "reference": "urn:uuid:e768d137-b1e3-4c15-a691-216757af11c7"
+                  }
+                },
+                {
+                  "type": {
+                    "text": "assembler"
+                  },
+                  "who": {
+                    "display": "Kaagaz · Gemini Vision handwriting extraction"
+                  }
+                }
+              ],
+              "entity": [
+                {
+                  "role": "source",
+                  "what": {
+                    "reference": "urn:uuid:833b6a4b-33f0-4656-9486-33f8b859899d"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

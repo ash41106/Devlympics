@@ -110,12 +110,14 @@
     </div>
     <div class="actions"><button class="btn" id="mVerify">✓ Confirm reading</button></div>
   </div>
-  <div class="section-t"><span>2</span>Send instructions to the health worker</div>
+  <div class="section-t"><span>2</span>Send advice to the health worker</div>
+  <p class="label" style="margin:-4px 0 8px">Advice or referral only, never a prescription: the patient has not been examined by this doctor.</p>
   <div class="slip" id="mSlip"></div>
   <div class="actions">
     <button class="btn primary" id="mSend"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Send to worker's phone</button>
     <button class="btn" id="mSpeak"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>Listen</button>
     <a class="btn" id="mSms" title="For workers with a basic phone">💬 Send as SMS</a>
+    <a class="btn" id="mFhir" target="_blank" title="Standard health record (HL7 FHIR R4, ABDM / NRCeS profiles)">⇄ FHIR record</a>
     <button class="btn" id="mPrint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Print slip</button>
   </div>
 </div></div>
@@ -311,6 +313,7 @@ function openRecord(e) {
   $("#mVerify").disabled = !!e.verifiedAt;
   $("#mSlip").textContent = current.hi;
   $("#mSms").href = "sms:?body=" + encodeURIComponent(`Kaagaz: ${current.hi}`);
+  $("#mFhir").href = "/api/fhir?entry=" + encodeURIComponent(e.id);
   drawCrop(e);
 }
 

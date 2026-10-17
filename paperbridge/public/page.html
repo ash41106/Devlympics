@@ -23,7 +23,8 @@
 <main class="pg">
   <div><div class="eyebrow"><span class="dot"></span> Scanned from a paper stamp</div>
     <h1 style="font-size:clamp(30px,5vw,48px)">This page, <span class="grad">digitally.</span></h1>
-    <p class="label" id="meta" style="margin-top:8px"></p></div>
+    <p class="label" id="meta" style="margin-top:8px"></p>
+    <a class="btn" id="fhir" style="margin-top:12px" download>⇄ Download as FHIR R4 (ABDM)</a></div>
   <div class="pg-grid">
     <div class="glass panel" id="photo"></div>
     <div class="glass panel" id="recs"><div class="empty">Loading…</div></div>
@@ -32,6 +33,7 @@
 <script>
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const id = new URLSearchParams(location.search).get("scan");
+document.getElementById("fhir").href = "/api/fhir?download&scan=" + encodeURIComponent(id || "");
 fetch("/api/page?scan=" + encodeURIComponent(id || "")).then((r) => r.json()).then(({ entries, alerts }) => {
   if (!entries.length) { document.getElementById("recs").innerHTML = `<div class="empty">No record found for this stamp.</div>`; return; }
   const e0 = entries[0];

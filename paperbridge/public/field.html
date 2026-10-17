@@ -207,7 +207,7 @@ function stamp(id) {
   const draw = () => window.QRCode ? new QRCode($("#qr"), { text: url, width: 96, height: 96, colorDark: "#1b1a2e", colorLight: "#fffaf0" }) : ($("#qr").textContent = "QR");
   if (window.QRCode) return draw();
   // Loaded only when a stamp is needed, so the app itself never waits on the network.
-  const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+  const sc = document.createElement("script"); sc.src = "/vendor/qrcode.min.js";
   sc.onload = draw; sc.onerror = draw; document.head.append(sc);
 }
 

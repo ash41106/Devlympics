@@ -6,6 +6,37 @@ Devlympics Shunya 2026 · PS: **Bridge the Gap**
 **Between them:** Kaagaz. One photo of the register they already keep → Gemini reads the Hindi handwriting → the doctor sees who is in danger → one tap sends a Hindi voice instruction → the worker replies by speaking.
 **The one number:** the Live Bridge times the full loop on stage. **21 days, one way → under a minute, both ways.**
 
+## Competitors and the gap they leave
+| Who | What they do | Where it breaks in the field |
+|---|---|---|
+| **ANMOL / RCH portal** (MoHFW) | Tablet app for ANMs, syncs when online | 75.6% of surveyed staff rated ANMOL *very difficult* to use (Chandigarh study, 2022) |
+| **SAMASTA** (Karnataka, 2025) | Digital ASHA diary: 485 manual fields → 134 | Still typing. Karnataka's earlier digitisation failed: no internet, no training, paper never phased out |
+| **Khushi Baby** | Offline app + NFC necklace | ASHA still enters fields by hand; another app to carry |
+| **Dimagi CommCare** | Offline forms + case management, 700k+ workers | Turns the health worker into a form filler; data flows one way |
+| **Wadhwani AI** (HealthVaani, Shishu Maapan) | AI assistants for single tasks | Point tools, each a separate app; registers untouched |
+| **Doxper** | Digital pen on encoded paper | Special pen and paper; built for clinics |
+| **Ninx** (Gemini competition, Uganda) | Gemini reads medical documents for patients | One way, no triage, no worker loop, no standard export |
+| **WhatsApp groups** (informal) | What workers actually use today | Duplicate reporting, privacy risk, "triple burden" (PMC study) |
+
+**The five loopholes they share**
+1. **More typing, not less.** Paper is never phased out, so workers do everything twice (Ideas for India; New Lines: 200 TB patients took two days to enter).
+2. **One way.** Data goes up; nothing useful comes back to the village.
+3. **Silos.** Every app is its own database.
+4. **Needs signal and smartphone skill.**
+5. **Black-box AI.** A doctor can't see why a patient was flagged.
+
+**What Kaagaz does differently:** zero new typing (the paper *is* the input) · two-way (advice back by Hindi voice, ink on the page) · **HL7 FHIR R4 export shaped to ABDM / NRCeS**, so it feeds the national system instead of becoming another silo · SMS and offline fallback · the evidence glows on the handwriting itself.
+
+**Positioning:** everyone else builds a *new app* for health. Kaagaz is the opposite: **no new app for the worker, no new database for the government.** It is the bridge between two things that already exist: the paper register and India's digital health stack.
+
+Sources: [WhatsApp triple burden (PMC)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12428105/) · [New Lines](https://newlinesmag.com/reportage/indias-digital-health-push-is-overworking-its-front-line-women/) · [Ideas for India](https://www.ideasforindia.in/topics/productivity-innovation/is-digitalisation-a-double-edged-sword-for-workers-in-indias-public-healthcare-system) · [SAMASTA (GKToday)](https://www.gktoday.in/karnataka-approves-samasta-for-health-record-digitisation/) · [Karnataka earlier failure (Think Global Health)](https://www.thinkglobalhealth.org/article/how-india-can-achieve-universal-health-coverage) · [ANMOL usability (PMC table)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12377784/table/T5) · [Khushi Baby (MIT Solve)](https://solve.mit.edu/solutions/28855) · [CommCare](https://commcare.dimagi.com/platform/) · [Wadhwani AI (YourStory)](https://cwv.yourstory.com/herstory/2025/03/ai-tool-asha-workers-monitor-newborn-health) · [Doxper / AI pen (IndiaAI)](https://indiaai.gov.in/article/how-an-ai-powered-pen-helps-health-workers-to-digitise-patient-records) · [Ninx](https://ai.google.dev/competition/projects/ninx) · [ABDM FHIR IG (NRCeS)](https://www.nrces.in/ndhm/fhir/r4/profiles.html)
+
+## Standards: FHIR R4 (ABDM)
+Every page exports as HL7 FHIR R4: one `DocumentBundle` per patient with a `WellnessRecord` Composition (NRCeS profile URLs), `Patient`, `Practitioner` (the ASHA), `Encounter` (home visit), LOINC-coded `Observation`s parsed from the handwriting (BP panel, weight, MUAC), a `RiskAssessment` (triage is decision support, *preliminary* until a doctor confirms), `Provenance` (ASHA wrote it → AI read it → doctor verified it), a `DocumentReference` to the **original paper photo**, and the doctor's message as a `Communication`, deliberately **not** a `MedicationRequest`: a remote doctor who hasn't examined the patient gives advice or referral, not a prescription.
+- `GET /api/fhir?scan=<page>` · `GET /api/fhir?entry=<patient>` · buttons in the doctor popup and on the QR page record
+- `python tools/fhir_validate.py` validates against the **official HL7 FHIR R4 JSON schema** (passes; a deliberately broken field is caught). Example: [`fhir-example.json`](fhir-example.json)
+- Honest scope: shaped to the NRCeS profiles and schema-valid; not yet certified through the ABDM sandbox.
+
 ## Pages
 | Page | What it does |
 |---|---|
