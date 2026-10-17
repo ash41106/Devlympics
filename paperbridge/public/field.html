@@ -272,13 +272,18 @@ function showAsks(list) {
 
 // Ink Replay: the doctor's reply is written by hand into the margin of the worker's own page.
 function inkReply(a) {
-  const e = mine[a.entryId], svg = $("#ink");
+  const e = mine[a.entryId], svg = $("#ink"), im = $("#paper img");
   if (!e || !svg || !Array.isArray(e.box)) return;
-  const [y1, , y2] = e.box, y = (y1 + y2) / 2;
+  // Real photos come in any shape: work in the image's own pixel space so the handwriting never stretches.
+  const W = im?.naturalWidth || 800, H = im?.naturalHeight || 1000;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  const [y1, x1, y2, x2] = e.box, y = ((y1 + y2) / 2000) * H, fs = Math.max(18, W * 0.04);
+  // Write in the free margin to the right of the row if there is room, otherwise just under it.
+  const room = 1 - x2 / 1000 > 0.28, tx = room ? (x2 / 1000) * W + fs * 0.6 : (x1 / 1000) * W + fs, ty = room ? y : (y2 / 1000) * H + fs * 1.1;
   const text = a.ink || "✓ आज ही PHC — डॉ.";
   svg.insertAdjacentHTML("beforeend", `<g class="inkline">
-    <path d="M 470 ${y - 2} q 40 -42 80 -14" />
-    <text x="540" y="${y - 30}" font-size="30" transform="rotate(-4 540 ${y})">${esc(text)}</text></g>`);
+    <path d="M ${tx - fs * 1.4} ${ty} q ${fs} ${-fs} ${fs * 1.2} ${-fs * 0.3}" style="stroke-width:${fs / 10}" />
+    <text x="${tx}" y="${ty}" font-size="${fs}" transform="rotate(-4 ${tx} ${ty})" style="stroke-width:${fs / 30}">${esc(text)}</text></g>`);
   $("#paperBox").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 

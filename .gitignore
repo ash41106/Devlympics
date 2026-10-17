@@ -1,3 +1,10 @@
 node_modules/
 .env
 *.log
+key.txt
+paperbridge/key.txt
+paperbridge/testpages/*.jpg
+paperbridge/testpages/*.jpeg
+paperbridge/testpages/*.png
+paperbridge/testpages/*.webp
+paperbridge/eval-report.html
