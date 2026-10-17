@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaagaz · Page record</title>
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="motion.css" />
+<link rel="stylesheet" href="site.css" />
+<script src="nav.js"></script>
+<style>
+.pg { max-width: 900px; margin: 0 auto; padding: 28px 16px 60px; display: grid; gap: 18px; }
+.pg-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; align-items: start; }
+.pg img { width: 100%; border-radius: 10px; border: 1.5px solid var(--text); }
+.pg .rec { padding: 12px 14px; border-top: 1.5px dashed var(--line); } .pg .rec:first-child { border-top: 0; }
+.pg .rec b { font-family: var(--display); font-size: 18px; }
+.pg .rec .hi, .pg .rec .reply { margin-top: 6px; }
+@media (max-width: 700px) { .pg-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="pg">
+  <div><div class="eyebrow"><span class="dot"></span> Scanned from a paper stamp</div>
+    <h1 style="font-size:clamp(30px,5vw,48px)">This page, <span class="grad">digitally.</span></h1>
+    <p class="label" id="meta" style="margin-top:8px"></p></div>
+  <div class="pg-grid">
+    <div class="glass panel" id="photo"></div>
+    <div class="glass panel" id="recs"><div class="empty">Loading…</div></div>
+  </div>
+</main>
+<script>
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const id = new URLSearchParams(location.search).get("scan");
+fetch("/api/page?scan=" + encodeURIComponent(id || "")).then((r) => r.json()).then(({ entries, alerts }) => {
+  if (!entries.length) { document.getElementById("recs").innerHTML = `<div class="empty">No record found for this stamp.</div>`; return; }
+  const e0 = entries[0];
+  document.getElementById("meta").textContent = `${e0.worker} · ${new Date(e0.at).toLocaleString()} · ${entries.length} patients`;
+  document.getElementById("photo").innerHTML = e0.src ? `<img src="${esc(e0.src)}" alt="Original register page" />` : `<div class="hi">🎙 “${esc(e0.spoken || "")}”</div>`;
+  document.getElementById("recs").innerHTML = entries.map((e) => {
+    const a = alerts.filter((x) => x.entryId === e.id);
+    return `<div class="rec"><b>${esc(e.name)}</b> · ${esc(e.village)} <span class="pill ${e.risk}" style="float:right">${e.risk}</span>
+      <div class="label">${esc(e.note)}</div><div class="label">↳ ${esc(e.reason)}</div>
+      ${a.map((x) => `<div class="hi">🩺 ${esc(x.hi)}</div>${x.reply ? `<div class="reply">🎙 “${esc(x.reply)}”</div>` : ""}`).join("")}</div>`;
+  }).join("");
+});
+</script>
+</body>
+</html>

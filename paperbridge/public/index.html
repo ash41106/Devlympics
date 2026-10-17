@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaagaz · Paper that talks back</title>
+<meta name="description" content="Kaagaz turns a photo of an ASHA worker's paper register into live health alerts, and sends help back in Hindi." />
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="motion.css" />
+<link rel="stylesheet" href="site.css" />
+<script src="nav.js"></script>
+</head>
+<body>
+
+<header class="l-hero">
+  <div class="watermark">कागज़</div>
+  <div class="l-wrap l-hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Bridge the Gap · Devlympics 2026</div>
+      <h1>Paper that<br/><span class="grad">talks back.</span></h1>
+      <p class="lead">India's village health workers write everything on paper. Doctors see it weeks later. Kaagaz reads the paper in seconds, tells the doctor who needs help, and sends instructions back to the worker in Hindi, by voice.</p>
+      <div class="l-cta">
+        <a class="btn primary" href="bridge.html"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>See the live bridge</a>
+        <a class="btn" href="field.html">Open the ASHA app</a>
+      </div>
+      <div class="trust"><span><b>0</b> typing</span><span><b>Hindi</b> + English handwriting</span><span><b>Works</b> offline</span><span>Built on <b>Gemini</b></span></div>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <div class="sheet">
+        <div class="sheet-h">ASHA Register</div>
+        <i style="width:78%"></i><i style="width:62%"></i><i class="hl r" style="width:84%"></i><i style="width:55%"></i><i class="hl a" style="width:70%"></i><i style="width:66%"></i>
+        <div class="scanbar"></div>
+      </div>
+      <div class="flow"><span></span><span></span><span></span></div>
+      <div class="screen">
+        <div class="screen-h"><b></b><b></b><b></b></div>
+        <div class="mini r"><em>SD</em><div><u></u><u></u></div><s>HIGH</s></div>
+        <div class="mini a"><em>ML</em><div><u></u><u></u></div><s>MED</s></div>
+        <div class="mini g"><em>KB</em><div><u></u><u></u></div><s>LOW</s></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="l-sec alt">
+  <div class="l-wrap">
+    <div class="kicker reveal">The gap</div>
+    <h2 class="reveal">Two worlds that should talk every day, but don't.</h2>
+    <p class="sub reveal">One side holds the information. The other side holds the expertise. Between them: a pile of paper and a three-week delay.</p>
+    <div class="worlds">
+      <div class="world w-paper reveal">
+        <div class="who">Side one</div>
+        <h3>📒 The ASHA worker</h3>
+        <ul>
+          <li>Keeps up to 11 paper registers for every health programme</li>
+          <li>Already juggles 7 apps, WhatsApp groups and spreadsheets</li>
+          <li>Sees danger signs first, but has no doctor to ask</li>
+          <li>Often low signal, sometimes low literacy</li>
+        </ul>
+      </div>
+      <div class="gapviz" id="gapviz">
+        <i class="plank l"></i><i class="plank r"></i>
+        <div class="days"><b id="gapDays">21</b><span>days of delay</span></div>
+      </div>
+      <div class="world reveal" style="--rd:.15s">
+        <div class="who">Side two</div>
+        <h3>🩺 The district doctor</h3>
+        <ul>
+          <li>Sees the data only after someone re-types it, weeks later</li>
+          <li>Can't spot an outbreak until it's already spreading</li>
+          <li>Has no fast way to send advice back to the village</li>
+          <li>Can't tell which patient needs help today</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><b data-count="1000000" data-suffix="+">0</b><span>ASHA workers recording India's rural health</span><small>National Health Mission</small></div>
+      <div class="stat reveal" style="--rd:.08s"><b data-count="11">0</b><span>paper registers an ASHA may maintain</span><small>KhushiHealth, MIT Solve</small></div>
+      <div class="stat reveal" style="--rd:.16s"><b data-count="7">0</b><span>apps one worker juggles, adding to the load</span><small>New Lines Magazine</small></div>
+      <div class="stat reveal" style="--rd:.24s"><b data-count="3" data-suffix="×">0</b><span>times the same data gets entered by hand</span><small>Gavi / Khushi Baby</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="l-sec">
+  <div class="l-wrap">
+    <div class="kicker reveal">How Kaagaz bridges it</div>
+    <h2 class="reveal">Keep the paper. Lose the delay.</h2>
+    <p class="sub reveal">We don't ask workers to learn another app. The paper they already keep becomes the input.</p>
+    <div class="flowline" id="flowline">
+      <div class="fstep reveal">
+        <div class="fnum">1</div>
+        <div><h3>Snap the page</h3><p>The worker photographs today's register page. No typing, no forms. Without signal, it waits on the phone and sends itself later.</p></div>
+        <div class="fcard"><b>📷 Register photo</b> · 214 KB<br/><span class="label">compressed on the phone for 2G</span></div>
+      </div>
+      <div class="fstep reveal">
+        <div class="fnum" style="border-color:#7b3fe4;color:#7b3fe4">2</div>
+        <div><h3>AI reads and triages</h3><p>Gemini reads Hindi and English handwriting, picks out danger signs, and says how sure it is. Anything uncertain goes to a human with the original handwriting beside it.</p></div>
+        <div class="fcard">
+          <div class="row-mini"><span class="av" style="background:#d93025">SD</span><b>Sunita Devi</b><span class="pill high" style="margin-left:auto">high</span></div>
+          <div class="row-mini"><span class="av" style="background:#d93025">RY</span><b>Ramesh Yadav</b><span class="tag bad" style="margin-left:auto">▲ worse</span></div>
+          <div class="row-mini"><span class="av" style="background:#e37400">P</span><b>Pooja</b><span class="tag warn" style="margin-left:auto">AI 64% sure</span></div>
+        </div>
+      </div>
+      <div class="fstep reveal">
+        <div class="fnum" style="border-color:#e8710a;color:#e8710a">3</div>
+        <div><h3>Help travels back</h3><p>The doctor sends instructions in one tap. The worker hears them in Hindi and replies by voice. The doctor sees "heard" and "replied", so the loop is closed.</p></div>
+        <div class="fcard"><div class="hi">🔊 "सुनीता जी को आज ही PHC ले जाएँ। BP की जाँच ज़रूरी है।"</div><div class="reply" style="margin-top:10px">🎙 "हाँ, अभी जा रही हूँ" · replied ✓</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="l-sec alt">
+  <div class="l-wrap">
+    <div class="kicker reveal">Built on the best of what exists</div>
+    <h2 class="reveal">Every tool replaces the paper. We read it, and talk back.</h2>
+    <table class="compare-t reveal">
+      <thead><tr><th></th><th>Paper-replacing apps</th><th>OCR services</th><th>Govt. portals</th><th class="us">Kaagaz</th></tr></thead>
+      <tbody>
+        <tr><td>No new typing for workers</td><td class="no">✕</td><td>✓</td><td class="no">✕</td><td class="us">✓</td></tr>
+        <tr><td>Reads Hindi handwriting</td><td class="no">✕</td><td>~</td><td class="no">✕</td><td class="us">✓</td></tr>
+        <tr><td>Flags risk and outbreaks</td><td class="no">✕</td><td class="no">✕</td><td>✓</td><td class="us">✓</td></tr>
+        <tr><td>Sends help back to the worker</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="us">✓</td></tr>
+        <tr><td>Works with no signal</td><td>✓</td><td class="no">✕</td><td class="no">✕</td><td class="us">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="l-sec">
+  <div class="l-wrap">
+    <div class="band reveal">
+      <div class="watermark">कागज़</div>
+      <h2>Watch both sides connect, live.</h2>
+      <p>The Live Bridge shows the worker's phone and the doctor's screen side by side. Every message crosses the bridge in real time, both ways.</p>
+      <div class="l-cta"><a class="btn primary" href="bridge.html">Open the Live Bridge →</a><a class="btn dark" href="doctor.html" style="border-color:#344054">Doctor view</a></div>
+    </div>
+    <div class="foot"><span><b style="color:var(--text)">Kaagaz</b> · Paper that talks back · GDG on Campus NSUT, Devlympics Shunya 2026</span><span>Gemini · Node.js · Web Speech</span></div>
+  </div>
+</section>
+
+<script>
+
+// Scroll reveal + count-up numbers.
+const fmt = (n) => n >= 1e6 ? (n / 1e6).toFixed(n % 1e6 ? 1 : 0) + "M" : n.toLocaleString("en-IN");
+function countUp(el) {
+  const to = +el.dataset.count, suf = el.dataset.suffix || "", t0 = performance.now();
+  const step = (t) => { const p = Math.min(1, (t - t0) / 1400); el.textContent = fmt(Math.round(to * (1 - (1 - p) ** 3))) + suf; if (p < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+const io = new IntersectionObserver((ents) => ents.forEach((e) => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add("in");
+  e.target.querySelectorAll("[data-count]").forEach(countUp);
+  io.unobserve(e.target);
+}), { threshold: 0.18 });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+// The broken bridge mends itself as you scroll past: 21 days becomes seconds.
+const gap = document.getElementById("gapviz");
+new IntersectionObserver(([e]) => {
+  if (!e.isIntersecting) return;
+  setTimeout(() => {
+    gap.classList.add("fixed");
+    let d = 21; const el = document.getElementById("gapDays");
+    const t = setInterval(() => { d--; el.textContent = d; if (d <= 3) { clearInterval(t); el.textContent = "3s"; el.style.color = "var(--green)"; el.nextElementSibling.textContent = "with Kaagaz"; } }, 70);
+  }, 900);
+}, { threshold: 0.6 }).observe(gap);
+
+// Timeline line draws as you scroll.
+const fl = document.getElementById("flowline");
+addEventListener("scroll", () => {
+  const r = fl.getBoundingClientRect(), vh = innerHeight;
+  fl.style.setProperty("--p", Math.max(0, Math.min(1, (vh * 0.7 - r.top) / r.height)));
+}, { passive: true });
+</script>
+</body>
+</html>

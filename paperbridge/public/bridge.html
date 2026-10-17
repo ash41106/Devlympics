@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaagaz · Live Bridge</title>
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="motion.css" />
+<link rel="stylesheet" href="site.css" />
+<script src="nav.js"></script>
+<style>
+.loopclock { text-align: right; line-height: 1; }
+.loopclock small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-bottom: 4px; }
+.loopclock b { font: 800 40px/1 Inter, system-ui, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--text); }
+.loopclock.run b { color: #1a73e8; } .loopclock.done b { color: #188038; }
+.finale { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: rgba(11,18,32,.92); color: #fff; opacity: 0; pointer-events: none; transition: opacity .5s; padding: 16px; text-align: center; }
+.finale.on { opacity: 1; pointer-events: auto; }
+.finale .vs { display: flex; gap: clamp(20px,6vw,90px); align-items: end; justify-content: center; flex-wrap: wrap; margin: 28px 0; }
+.finale .vs div { min-width: 200px; } .finale .vs span { display: block; font-size: 14px; opacity: .7; margin-top: 10px; font-weight: 600; }
+.finale .old { font: 800 clamp(48px,9vw,120px)/1 Inter, sans-serif; color: #f28b82; text-decoration: line-through; text-decoration-thickness: 6px; }
+.finale .new { font: 800 clamp(64px,13vw,170px)/1 Inter, sans-serif; color: #81c995; font-variant-numeric: tabular-nums; }
+.finale h2 { font-size: clamp(22px,3.4vw,40px); margin: 0; } .finale p { opacity: .75; max-width: 640px; margin: 0 auto; }
+.finale .hi { font-family: var(--hindi); font-size: 22px; margin-top: 18px; color: #fde293; }
+</style>
+</head>
+<body class="stage">
+
+<div class="b-head">
+  <div>
+    <div class="eyebrow"><span class="dot" style="background:#ea4335"></span> Live · everything below is real and connected</div>
+    <h1>The worker's phone and the doctor's screen, <span class="grad">bridged.</span></h1>
+    <p>Use the phone on the left exactly like an ASHA would. Watch every message cross the bridge.</p>
+  </div>
+  <div class="b-controls">
+    <div class="loopclock" id="clock"><small>paper → reply</small><b id="clockT">0:00</b></div>
+    <div class="counter"><div><b id="cUp">0</b>to doctor</div><div><b id="cDown">0</b>to worker</div><div><b id="cAck">0</b>replies</div></div>
+    <button class="btn primary" id="sample"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>Send sample page 1</button>
+    <button class="btn" id="reset">Start over</button>
+  </div>
+</div>
+
+<main class="b-stage">
+  <div>
+    <div class="side-cap"><b>📒 ASHA worker</b><span>village · paper · Hindi · low signal</span></div>
+    <div class="phone"><iframe src="field.html?embed" title="ASHA phone app"></iframe></div>
+  </div>
+
+  <div class="bridge" id="bridge">
+    <svg viewBox="0 0 300 520" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="up" x1="0" x2="1"><stop offset="0" stop-color="#ffc93c"/><stop offset="1" stop-color="#ffe08a"/></linearGradient>
+        <linearGradient id="dn" x1="1" x2="0"><stop offset="0" stop-color="#d93025"/><stop offset="1" stop-color="#e8710a"/></linearGradient>
+      </defs>
+      <path id="laneUp" d="M0,215 C90,150 210,150 300,215" fill="none" stroke="url(#up)" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round">
+        <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1s" repeatCount="indefinite"/></path>
+      <path id="laneDown" d="M300,305 C210,370 90,370 0,305" fill="none" stroke="url(#dn)" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round">
+        <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1s" repeatCount="indefinite"/></path>
+      <text x="150" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#ffc93c" font-family="Kalam" font-size="16">paper → data</text>
+      <text x="150" y="388" text-anchor="middle" font-size="12" font-weight="700" fill="#ff7a5c" font-family="Kalam" font-size="16">help → voice</text>
+      <text x="150" y="266" text-anchor="middle" font-size="44" font-weight="800" fill="#0b1220" opacity=".06" font-family="Noto Sans Devanagari">कागज़</text>
+    </svg>
+    <div class="b-legend">
+      <span><i style="background:#1a73e8"></i>patients read from paper</span>
+      <span><i style="background:#d93025"></i>doctor's instruction in Hindi</span>
+      <span><i style="background:#188038"></i>worker heard / replied</span>
+    </div>
+  </div>
+
+  <div class="laptop">
+    <div class="side-cap"><b>🩺 District doctor</b><span>town · dashboard · English · always online</span></div>
+    <div class="lid"><iframe src="doctor.html?embed" title="Doctor dashboard"></iframe></div>
+    <div class="base"></div>
+  </div>
+</main>
+
+<div class="finale" id="finale" role="dialog" aria-label="Loop closed">
+  <div>
+    <h2>Loop closed. Paper → doctor → voice → reply.</h2>
+    <div class="vs">
+      <div><div class="old">21 days</div><span>today · one way, and nothing comes back</span></div>
+      <div><div class="new" id="finT">0:00</div><span>with Kaagaz · both ways</span></div>
+    </div>
+    <p>Same paper. Same worker. No typing. The doctor knew who was in danger, and the village heard back in Hindi.</p>
+    <div class="hi" id="finReply"></div>
+    <button class="btn primary" style="margin-top:26px" onclick="this.closest('.finale').classList.remove('on')">Back to the bridge</button>
+  </div>
+</div>
+
+<section class="b-log"><div class="label" style="margin-bottom:8px">What just crossed the bridge</div><div class="b-log-inner" id="log"></div></section>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const counts = { up: 0, down: 0, ack: 0 };
+let queue = Promise.resolve();
+
+// Send a labelled packet along one of the bridge lanes.
+function packet(lane, html, cls, ms = 1500) {
+  const path = document.getElementById(lane), box = $("#bridge"), svg = box.querySelector("svg");
+  const el = document.createElement("div"); el.className = "packet " + cls; el.innerHTML = html; box.append(el);
+  const len = path.getTotalLength(), t0 = performance.now();
+  const sx = () => box.clientWidth / 300, sy = () => svg.clientHeight / 520;
+  return new Promise((done) => {
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / ms), e = p < .5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
+      const pt = path.getPointAtLength(len * e);
+      el.style.left = pt.x * sx() + "px"; el.style.top = pt.y * sy() + "px";
+      el.style.opacity = p < .08 ? p / .08 : p > .92 ? (1 - p) / .08 : 1;
+      if (p < 1) requestAnimationFrame(step); else { el.remove(); done(); }
+    };
+    requestAnimationFrame(step);
+  });
+}
+// Stagger packets so a burst of patients looks like a stream, not a pile.
+const send = (...a) => { const p = queue.then(() => new Promise((r) => setTimeout(r, 260))); queue = p; p.then(() => packet(...a)); };
+
+function log(html) {
+  const d = document.createElement("div"); d.className = "b-ev"; d.innerHTML = `<time>${new Date().toLocaleTimeString()}</time>${html}`;
+  $("#log").prepend(d);
+}
+function bump(k) { counts[k]++; $("#c" + k[0].toUpperCase() + k.slice(1)).textContent = counts[k]; }
+
+// Loop clock: starts when a page leaves the phone, stops when the worker's voice reply lands.
+let t0 = 0, tick = null;
+const fmtT = (ms) => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
+function clockStart() {
+  if (tick) return; t0 = Date.now(); $("#clock").className = "loopclock run";
+  tick = setInterval(() => ($("#clockT").textContent = fmtT(Date.now() - t0)), 250);
+}
+function clockStop(reply) {
+  if (!tick) return; clearInterval(tick); tick = null;
+  const t = fmtT(Date.now() - t0); $("#clockT").textContent = t; $("#clock").className = "loopclock done";
+  $("#finT").textContent = t; $("#finReply").textContent = reply ? `🎙 “${reply}”` : "";
+  setTimeout(() => $("#finale").classList.add("on"), 1600);
+}
+
+const es = new EventSource("/api/stream");
+es.addEventListener("scanning", (m) => { clockStart(); send("laneUp", "📄 register page", "up", 1300); log(`<b>📄 Page sent</b> by ${esc(JSON.parse(m.data).worker)}`); });
+es.addEventListener("found", (m) => { const f = JSON.parse(m.data); send("laneUp", `✓ ${esc(f.name)}`, "up", 1400); });
+es.addEventListener("entries", (m) => {
+  const { added } = JSON.parse(m.data);
+  added.forEach(() => bump("up"));
+  const hi = added.filter((e) => e.risk === "high");
+  hi.forEach((e) => send("laneUp", `⚠ ${esc(e.name)} · urgent`, "hi", 1300));
+  log(`<b>🩺 Doctor received ${added.length} patients</b> · <span class="high">${hi.length} urgent</span>`);
+});
+es.addEventListener("alert", (m) => {
+  const a = JSON.parse(m.data); bump("down");
+  send("laneDown", `🔊 ${esc(a.hi.slice(0, 26))}…`, "down", 1700);
+  log(`<b>🔊 Instruction sent</b> to ${esc(a.worker)}<div class="hi" style="font-family:var(--hindi)">${esc(a.hi)}</div>`);
+});
+es.addEventListener("ack", (m) => {
+  const a = JSON.parse(m.data);
+  if (a.status === "acknowledged") { bump("ack"); clockStop(a.reply); send("laneUp", `🎙 “${esc((a.reply || "").slice(0, 22))}”`, "ack", 1500); log(`<b class="low">🎙 Worker replied</b><div style="font-family:var(--hindi)">${esc(a.reply)}</div>`); }
+  else if (a.status === "heard") { send("laneUp", "✓ heard", "ack", 1200); log(`<b class="low">✓ Worker heard the message</b>`); }
+});
+es.addEventListener("answer", (m) => { const a = JSON.parse(m.data); send("laneUp", `🙋‍♀️ “${esc(a.answer.slice(0, 20))}”`, "ack", 1500);
+  log(`<b class="low">🙋‍♀️ ASHA answered the AI</b> about ${esc(a.name)}: “${esc(a.answer)}”${a.risk === "high" ? ' · <span class="high">now urgent</span>' : ""}`); });
+es.addEventListener("reset", () => location.reload());
+
+let page = 1;
+$("#sample").onclick = async () => {
+  const p = page; page = p === 1 ? 2 : 1;
+  $("#sample").lastChild.textContent = `Send sample page ${page}`;
+  await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ demoPage: p, worker: "ASHA Meena · Sonpur" }) });
+};
+$("#reset").onclick = () => confirm("Clear all data and start over?") && fetch("/api/reset", { method: "POST" });
+</script>
+</body>
+</html>

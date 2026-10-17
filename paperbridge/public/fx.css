@@ -1,0 +1,67 @@
+/* ================= Kaagaz FX: futuristic motion layer ================= */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vtOut .28s cubic-bezier(.4,0,1,1) both; }
+::view-transition-new(root) { animation: vtIn .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes vtOut { to { opacity: 0; transform: scale(.985); filter: blur(4px); } }
+@keyframes vtIn { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } }
+
+/* living gradient mesh behind everything */
+body { background: transparent !important; }
+html.embed body { background: var(--bg) !important; }
+.mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
+.mesh i { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(90px); opacity: .5; mix-blend-mode: multiply; animation: blob 26s ease-in-out infinite alternate; }
+.mesh i:nth-child(1) { background: #c9dcff; left: -12vmax; top: -14vmax; }
+.mesh i:nth-child(2) { background: #e6d9ff; right: -14vmax; top: 6vmax; animation-duration: 32s; animation-delay: -8s; }
+.mesh i:nth-child(3) { background: #ffe1cf; left: 26vmax; bottom: -22vmax; animation-duration: 38s; animation-delay: -14s; opacity: .38; }
+@keyframes blob { 33% { transform: translate(8vmax, 6vmax) scale(1.12); } 66% { transform: translate(-6vmax, 10vmax) scale(.92); } 100% { transform: translate(4vmax, -6vmax) scale(1.05); } }
+.mesh::after { content: ""; position: absolute; inset: 0; opacity: .5;
+  background-image: radial-gradient(rgba(26,115,232,.13) 1px, transparent 1px); background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, transparent 70%); }
+html.embed .mesh { display: none; }
+
+/* glass cards on top of the mesh */
+.glass, .feat, .stat, .world, .fcard, .compare-t, .b-ev { background: rgba(255,255,255,.78); backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); }
+.world.w-paper { background: rgba(255,250,240,.86); }
+.l-sec.alt { background: rgba(255,255,255,.45); backdrop-filter: blur(6px); }
+
+/* cursor spotlight: a soft light follows the pointer inside cards */
+.spot { position: relative; isolation: isolate; }
+.spot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(26,115,232,.10), transparent 45%); }
+.spot:hover::after { opacity: 1; }
+.spot::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 2; opacity: 0; transition: opacity .3s; padding: 1px;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(26,115,232,.55), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.spot:hover::before { opacity: 1; }
+
+/* 3D tilt */
+.tilt { transform-style: preserve-3d; transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; will-change: transform; }
+
+/* scroll progress */
+.progress { position: fixed; top: 0; left: 0; height: 3px; z-index: 100; width: 100%; transform-origin: left; transform: scaleX(var(--sp, 0));
+  background: linear-gradient(90deg, #1a73e8, #7b3fe4, #e8710a); }
+
+/* hero particle network */
+.particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.l-hero .l-wrap, .l-hero .watermark { position: relative; z-index: 1; }
+
+/* shimmering gradient text */
+.grad { background-size: 200% auto; animation: shimmer 6s linear infinite; background-image: linear-gradient(90deg, #1a73e8, #7b3fe4, #e8710a, #7b3fe4, #1a73e8) !important; }
+@keyframes shimmer { to { background-position: 200% center; } }
+
+/* nav glow on the active page */
+.site-links a.on { background: linear-gradient(135deg, #0b1220, #1e2a44); box-shadow: 0 6px 18px -8px rgba(11,18,32,.6); }
+.site-nav { background: rgba(255,255,255,.66); }
+
+/* Ask Didi chat */
+.ask { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; }
+.ask .btn { padding: 0 14px; font-size: 17px; }
+.qa { display: grid; gap: 6px; margin-top: 12px; animation: rise .4s var(--ease) backwards; }
+.qa .q { justify-self: end; max-width: 85%; padding: 9px 13px; border-radius: 14px 14px 4px 14px; background: var(--blue); color: #fff; font-family: var(--hindi); font-size: 14.5px; }
+.qa .a { max-width: 92%; padding: 11px 13px; border-radius: 14px 14px 14px 4px; background: #f1f3f6; font-family: var(--hindi); font-size: 15px; line-height: 1.6; display: grid; justify-items: start; }
+.typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: #98a2b3; animation: typing 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 50% { transform: translateY(-4px); opacity: .4; } }
+
+@media (prefers-reduced-motion: reduce) { .mesh i, .grad { animation: none !important; } .particles { display: none; } }

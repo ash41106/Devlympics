@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaagaz Command Center</title>
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="motion.css" />
+<link rel="stylesheet" href="site.css" />
+<script src="nav.js"></script>
+</head>
+<body>
+<div class="aurora"></div><div class="grid-bg"></div>
+
+<header class="top">
+  <div class="brand"><img class="logo" src="logo.svg" alt="" /> Kaagaz <span class="label" style="margin-left:6px">Command Center</span></div>
+  <div class="status"><span class="mode"><span class="dot"></span><span id="mode">connecting…</span></span>
+    <button class="btn" id="shield" title="Blur patient names before projecting"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Hide names</button>
+    <button class="btn" id="reset" title="Clear all data and start over"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Start over</button></div>
+</header>
+
+<main class="wrap">
+  <section class="hero glass">
+   <div class="hero-grid">
+    <div>
+    <div class="eyebrow"><span class="dot"></span> Bridge the Gap · Devlympics 2026</div>
+    <h1>Turn a photo of a paper health register into <span class="grad">alerts that save lives</span></h1>
+    <p>Village health workers (ASHAs) write everything on paper. Doctors only see it weeks later. Kaagaz reads the paper in seconds, shows doctors who needs help, and sends instructions back to the worker in Hindi.</p>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <div class="sheet">
+        <div class="sheet-h">ASHA Register</div>
+        <i style="width:78%"></i><i style="width:62%"></i><i class="hl r" style="width:84%"></i><i style="width:55%"></i><i class="hl a" style="width:70%"></i><i style="width:66%"></i>
+        <div class="scanbar"></div>
+      </div>
+      <div class="flow"><span></span><span></span><span></span></div>
+      <div class="screen">
+        <div class="screen-h"><b></b><b></b><b></b></div>
+        <div class="mini r"><em>SD</em><div><u></u><u></u></div><s>HIGH</s></div>
+        <div class="mini a"><em>ML</em><div><u></u><u></u></div><s>MED</s></div>
+        <div class="mini g"><em>KB</em><div><u></u><u></u></div><s>LOW</s></div>
+      </div>
+    </div>
+   </div>
+    <div class="how" id="how">
+      <div data-s="1"><b><span>1</span>Worker takes a photo</b><p class="label">of the paper register, on any phone</p></div>
+      <div data-s="2"><b><span>2</span>AI reads &amp; flags risk</b><p class="label">doctor sees urgent patients first</p></div>
+      <div data-s="3"><b><span>3</span>Help goes back</b><p class="label">worker gets a Hindi voice message</p></div>
+    </div>
+    <div class="hero-cta">
+      <button class="btn primary" id="tryNext"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>Try sample page 1</button>
+      <span class="label">or open <code id="fieldUrl">/field.html</code> on a phone to scan real paper</span>
+    </div>
+  </section>
+
+  <div class="kpi glass" style="--accent:var(--blue)"><div class="label">Patients read from paper</div><div class="v" id="k-total">0</div><div class="s" id="k-fields">no typing needed</div></div>
+  <div class="kpi glass" style="--accent:var(--red)"><div class="label">Need urgent care</div><div class="v" id="k-high">0</div><div class="s" id="k-esc">flagged by AI</div></div>
+  <div class="kpi glass" style="--accent:var(--amber)"><div class="label">Paper → doctor's screen</div><div class="v" id="k-lat">—</div><div class="s">today it takes ~21 days</div></div>
+  <div class="kpi glass" style="--accent:var(--green)"><div class="label">Workers who replied</div><div class="v"><span id="k-ack">0</span><small>/<span id="k-alerts">0</span></small></div><div class="s">messages confirmed</div></div>
+
+  <section class="feed glass panel">
+    <div class="panel-h">
+      <h2>Patients</h2>
+      <div class="tabs" id="tabs">
+        <button class="tab on" data-f="all">All</button>
+        <button class="tab" data-f="high">Urgent <b id="c-high">0</b></button>
+        <button class="tab" data-f="verify">AI unsure <b id="c-verify">0</b></button>
+      </div>
+    </div>
+    <div class="outbreak-banner" id="ob">
+      <div><b><span class="siren"></span><span id="obTitle"></span></b><div class="m" id="obSub"></div></div>
+      <button class="btn danger" id="obSend"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>Warn all health workers</button>
+    </div>
+    <div class="rows" id="rows"><div class="empty"><b>No patients yet.</b><br/>Scan a register page to see patients appear here, most urgent first.<br/><button class="btn primary" onclick="tryNext()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>Try sample page 1</button></div></div>
+  </section>
+
+  <aside class="side">
+    <section class="glass panel">
+      <div class="panel-h"><h2>Villages</h2><span class="label">Sonpur block</span></div>
+      <div class="map"><svg viewBox="0 0 400 250" id="map"></svg></div>
+      <div class="map-legend"><span><i style="background:var(--red)"></i>urgent patient</span><span><i style="background:var(--green)"></i>all fine</span><span><i style="border:2px dashed var(--red)"></i>possible outbreak</span></div>
+    </section>
+    <section class="glass panel">
+      <div class="panel-h"><h2>Messages to workers</h2></div>
+      <div class="alerts" id="alerts"><div class="empty" style="padding:24px">Click a patient, then <b>Send to worker</b>.<br/>You'll see when they hear it and reply.</div></div>
+    </section>
+  </aside>
+</main>
+
+<div class="scan-toast glass" id="toast"><div class="spinner"></div><div><b>Paper incoming</b><div class="label" id="toastSub" style="margin-top:6px">Gemini Vision reading handwriting…</div><div class="toast-found" id="toastFound"></div></div></div>
+
+<div class="modal" id="modal"><div class="sheet glass wide">
+  <div class="panel-h" style="margin:0"><h3 id="mName"></h3><button class="btn" id="mClose" aria-label="Close">✕</button></div>
+  <div id="mWhy" style="color:#374151;font-size:15px"></div>
+  <div class="tags" id="mTags"></div>
+  <div class="history" id="mHist"></div>
+  <div class="section-t"><span>1</span>Check what the AI read</div>
+  <div class="compare">
+    <div class="crop-cap"><span class="label">Original handwriting from the paper</span><span class="label" id="mWho"></span></div>
+    <canvas class="crop" id="mCrop"></canvas>
+    <div class="crop-cap"><span class="label">What the AI read (you can fix it)</span><span class="conf" id="mConf"></span></div>
+    <div class="edit" id="mEdit">
+      <label>Name<input id="fName" /></label><label>Age<input id="fAge" inputmode="numeric" /></label>
+      <label>Village<input id="fVillage" /></label>
+      <label>Risk<select id="fRisk"><option>high</option><option>medium</option><option>low</option></select></label>
+      <label class="full">Note<input id="fNote" /></label>
+    </div>
+    <div class="actions"><button class="btn" id="mVerify">✓ Confirm reading</button></div>
+  </div>
+  <div class="section-t"><span>2</span>Send instructions to the health worker</div>
+  <div class="slip" id="mSlip"></div>
+  <div class="actions">
+    <button class="btn primary" id="mSend"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Send to worker's phone</button>
+    <button class="btn" id="mSpeak"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>Listen</button>
+    <a class="btn" id="mSms" title="For workers with a basic phone">💬 Send as SMS</a>
+    <button class="btn" id="mPrint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Print slip</button>
+  </div>
+</div></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pii = (s) => `<span class="pii">${esc(s)}</span>`;
+const post = (u, b) => fetch(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) }).then((r) => r.json());
+const CAT = { pregnancy: "Pregnancy", vaccination: "Vaccination", fever: "Fever", nutrition: "Nutrition", other: "Routine" };
+const initials = (n) => String(n || "?").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+const ICON = { pregnancy: "🤰", vaccination: "💉", fever: "🌡️", nutrition: "🥣", other: "📋" };
+const HI_ACTION = {
+  pregnancy: (e) => `${e.name} जी को आज ही PHC ले जाएँ। BP और सूजन की जाँच ज़रूरी है। सिरदर्द या धुंधला दिखे तो 108 एम्बुलेंस बुलाएँ।`,
+  vaccination: (e) => `${e.name} का टीका छूट गया है। इस गुरुवार के टीकाकरण सत्र में ज़रूर लाएँ।`,
+  fever: (e) => e.escalated ? `${e.name} का बुखार बढ़ गया है और उल्टी हो रही है। आज ही PHC रेफ़र करें, देर न करें।` : `${e.name} को कई दिन से बुखार है। आज मलेरिया/डेंगू की जाँच करवाएँ।`,
+  nutrition: (e) => `${e.name} गंभीर कुपोषण में है। आंगनवाड़ी से पोषण आहार दिलाएँ और NRC रेफ़र करें।`,
+  other: (e) => `${e.name} की अगली विज़िट समय पर करें।`,
+};
+// Short margin note the doctor "writes" onto the worker's own paper (Ink Replay).
+const INK = { pregnancy: "आज ही PHC · BP ✓", vaccination: "गुरुवार टीका ✓", fever: "आज PHC रेफ़र ✓", nutrition: "NRC भेजें ✓", other: "ठीक है ✓" };
+const VILLAGES = { Rampur: [90, 70], Sonpur: [210, 140], Kheda: [320, 80], Lalganj: [130, 195], Bhagwanpur: [300, 200] };
+const FIELDS = ["name", "age", "gender", "village", "category", "note"];
+let entries = [], alerts = [], scanStart = 0, lats = [], filter = "all";
+
+function pos(v) {
+  if (VILLAGES[v]) return VILLAGES[v];
+  const h = [...(v || "x")].reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7);
+  return (VILLAGES[v] = [40 + Math.abs(h) % 320, 30 + Math.abs(h >> 5) % 190]);
+}
+
+function tween(el, to) {
+  const from = +el.dataset.v || 0;
+  if (from !== to) { const k = el.closest(".kpi"); k?.classList.remove("bump"); void k?.offsetWidth; k?.classList.add("bump"); } el.dataset.v = to; const t0 = performance.now();
+  const step = (t) => { const p = Math.min(1, (t - t0) / 700); el.textContent = Math.round(from + (to - from) * (1 - (1 - p) ** 3)); if (p < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+
+function renderKPIs() {
+  tween($("#k-total"), entries.length);
+  tween($("#k-high"), entries.filter((e) => e.risk === "high").length);
+  tween($("#k-alerts"), alerts.length);
+  tween($("#k-ack"), alerts.filter((a) => a.status === "acknowledged").length);
+  const filled = entries.reduce((n, e) => n + FIELDS.filter((f) => e[f] != null && e[f] !== "").length, 0);
+  $("#k-fields").textContent = `${filled} fields filled · 0 typed`;
+  const worse = entries.filter((e) => e.escalated).length;
+  $("#k-esc").textContent = worse ? `${worse} getting worse since last visit` : "auto-triaged by AI";
+  $("#k-lat").textContent = lats.length ? (lats.reduce((a, b) => a + b) / lats.length / 1000).toFixed(1) + "s" : "—";
+  $("#c-verify").textContent = entries.filter((e) => !e.verified).length;
+  $("#c-high").textContent = entries.filter((e) => e.risk === "high").length;
+}
+
+function badges(e) {
+  let b = "";
+  if (!e.verified) b += `<span class="tag warn">⚠ AI not sure (${Math.round(e.confidence * 100)}%) · please check</span>`;
+  else if (e.verifiedAt) b += `<span class="tag ok">✓ checked by doctor${e.edited ? " · corrected" : ""}</span>`;
+  if (e.visit > 1) b += `<span class="tag ${e.escalated ? "bad" : ""}">${e.escalated ? "▲ Getting worse since last visit" : "Visit " + e.visit}</span>`;
+  return b;
+}
+
+function renderRows(newIds = new Set()) {
+  if (!entries.length) return;
+  const order = { high: 0, medium: 1, low: 2 };
+  const list = entries.filter((e) => filter === "all" || (filter === "verify" ? !e.verified : e.risk === "high"))
+    .sort((a, b) => (b.escalated - a.escalated) || order[a.risk] - order[b.risk] || b.at - a.at);
+  $("#rows").innerHTML = list.length ? list.map((e, i) => `
+    <div class="row ${newIds.has(e.id) ? "new" : ""} ${e.verified ? "" : "unsure"} risk-${e.risk}" data-id="${e.id}" style="--d:${Math.min(i, 12) * 45}ms">
+      <div class="avatar ${e.risk}"><span class="pii">${esc(initials(e.name))}</span></div>
+      <div><div class="n">${pii(e.name)}${e.age != null ? `, ${esc(e.age)}` : ""}</div>
+        <div class="meta"><span class="cat">${CAT[e.category] || "Other"}</span> · ${esc(e.village)}</div>
+        <div class="m">${esc(e.note)}</div><div class="why">↳ ${esc(e.reason)}</div>
+        <div class="tags">${badges(e)}</div></div>
+      <span class="pill ${e.risk}">${e.risk}</span>
+    </div>`).join("") : `<div class="empty">${filter === "verify" ? "All AI readings have been checked. ✓" : "No patients in this list."}</div>`;
+}
+
+function renderMap() {
+  const byV = {};
+  entries.forEach((e) => { const v = (byV[e.village] ||= { n: 0, high: 0 }); v.n++; if (e.risk === "high") v.high++; });
+  Object.keys(VILLAGES).forEach((v) => (byV[v] ||= { n: 0, high: 0 }));
+  const halos = clusters().map(({ village }) => { const [x, y] = pos(village);
+    return [0, 1, 2].map((k) => `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#c8321e" stroke-width="2"><animate attributeName="r" from="10" to="110" dur="3s" begin="${k}s" repeatCount="indefinite"/><animate attributeName="opacity" from=".8" to="0" dur="3s" begin="${k}s" repeatCount="indefinite"/></circle>`).join("") + `<circle cx="${x}" cy="${y}" r="42" fill="rgba(217,48,37,.08)" stroke="#d93025" stroke-dasharray="5 5"><animateTransform attributeName="transform" type="rotate" from="0 ${x} ${y}" to="360 ${x} ${y}" dur="12s" repeatCount="indefinite"/></circle>
+      <text x="${x}" y="${y - 48}" fill="#d93025" font-size="10" text-anchor="middle" font-family="Inter" font-weight="700">POSSIBLE OUTBREAK</text>`; }).join("");
+  const nodes = Object.entries(byV).map(([v, d]) => {
+    const [x, y] = pos(v); const c = d.high ? "#d93025" : d.n ? "#34a853" : "#c4cad6"; const r = Math.min(18, 5 + d.n * 2.5);
+    return `<g>${d.high ? `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${c}"><animate attributeName="r" from="${r}" to="${r + 22}" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" from=".9" to="0" dur="1.6s" repeatCount="indefinite"/></circle>` : ""}
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity=".85"/>
+      <text x="${x}" y="${y + r + 14}" fill="#4b5563" font-size="11" text-anchor="middle" font-family="Kalam" font-weight="700">${esc(v)}${d.n ? ` · ${d.n}` : ""}</text></g>`;
+  }).join("");
+  $("#map").innerHTML = `
+    <defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#ffc93c" stop-opacity="0"/><stop offset="1" stop-color="#ffc93c" stop-opacity=".45"/></linearGradient></defs>
+    ${[40, 80, 120].map((r) => `<circle cx="200" cy="125" r="${r}" fill="none" stroke="#d8c9a6" stroke-dasharray="3 5"/>`).join("")}
+    <path class="radar" d="M200 125 L320 125 A120 120 0 0 0 284 40 Z" fill="url(#sw)"/>${halos}${nodes}`;
+}
+
+function renderAlerts() {
+  if (!alerts.length) return;
+  const steps = ["sent", "heard", "acknowledged"];
+  $("#alerts").innerHTML = alerts.map((a) => {
+    const at = steps.indexOf(a.status);
+    return `<div class="alert ${a.kind === "outbreak" ? "outbreak" : ""}">
+      <b>To ${esc(a.worker)}</b> · ${a.kind === "outbreak" ? esc(a.name) : pii(a.name)} <span class="label" style="float:right">${new Date(a.at).toLocaleTimeString()}</span>
+      <div class="hi">${esc(a.hi)}</div>
+      <div class="loop">${steps.map((s, i) => `<span class="${i <= at ? "on" : ""}">${["Sent", "Heard", "Replied"][i]}</span>`).join("<i></i>")}</div>
+      ${a.reply ? `<div class="reply">🎙 “${esc(a.reply)}”</div>` : ""}
+    </div>`;
+  }).join("");
+}
+
+// Outbreak detector: 3+ fever cases in one village within 7 days = cluster.
+const WINDOW = 7 * 864e5;
+function clusters() {
+  const by = {};
+  entries.filter((e) => e.category === "fever" && Date.now() - e.at < WINDOW).forEach((e) => { const m = (by[e.village] ||= new Map()), k = e.name.toLowerCase(); if (!m.has(k)) m.set(k, e); }); // newest-first: keep latest visit
+  return Object.entries(by).map(([village, m]) => ({ village, list: [...m.values()] })).filter((c) => c.list.length >= 3);
+}
+function renderOutbreak() {
+  const c = clusters()[0];
+  $("#ob").classList.toggle("on", !!c);
+  if (!c) return;
+  const high = c.list.filter((e) => e.risk === "high").length;
+  $("#obTitle").textContent = `Possible outbreak: ${c.list.length} people with fever in ${c.village}`;
+  $("#obSub").innerHTML = `${c.list.map((e) => pii(e.name)).join(", ")} · ${high} with warning signs · across ${((n) => `${n} paper page${n > 1 ? "s" : ""}`)(new Set(entries.filter((e) => e.category === "fever" && e.village === c.village).map((e) => e.scanId)).size)}. Could be dengue or malaria. Found weeks before government systems would notice.`;
+}
+$("#obSend").onclick = async () => {
+  const c = clusters()[0]; if (!c) return;
+  $("#obSend").disabled = true;
+  await post("/api/alert", { kind: "outbreak", risk: "high", name: `${c.village} fever cluster`, village: c.village, worker: "All ASHAs · Sonpur block",
+    hi: `${c.village} में ${c.list.length} लोगों को बुखार है। आज घर-घर बुखार सर्वे करें, सबका मलेरिया/डेंगू टेस्ट करवाएँ, और घरों के आसपास पानी जमा न होने दें।` });
+  $("#obSend").disabled = false;
+};
+
+// "How it works" strip lights up the step that is happening right now.
+function setHow(n) { document.querySelectorAll("#how > div").forEach((d) => { const s = +d.dataset.s; d.classList.toggle("on", s === n); d.classList.toggle("done", s < n); }); }
+function syncHow() { setHow(alerts.length ? 4 : entries.length ? 3 : 1); }
+let samplePage = 1;
+async function tryNext() {
+  const p = samplePage; samplePage = p === 1 ? 2 : 1;
+  document.querySelectorAll("#tryNext").forEach((b) => (b.innerHTML = `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>Try sample page ${samplePage}`));
+  await post("/api/extract", { demoPage: p, worker: "ASHA Meena · Sonpur" });
+}
+$("#tryNext").onclick = tryNext;
+
+function all(newIds) { syncHow(); renderKPIs(); renderRows(newIds); renderMap(); renderAlerts(); renderOutbreak(); }
+
+$("#tabs").onclick = (ev) => {
+  const t = ev.target.closest(".tab"); if (!t) return;
+  document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("on", x === t));
+  filter = t.dataset.f; renderRows();
+};
+$("#shield").onclick = () => { document.body.classList.toggle("shield"); $("#shield").classList.toggle("active"); };
+
+// ---- live stream ----
+const es = new EventSource("/api/stream");
+es.addEventListener("init", (m) => { const d = JSON.parse(m.data); entries = d.entries; alerts = d.alerts; $("#mode").textContent = d.live ? "LIVE · Gemini Vision" : "DEMO MODE"; all(); });
+es.addEventListener("scanning", (m) => { scanStart = Date.now(); $("#toastFound").innerHTML = ""; $("#toastSub").textContent = `${JSON.parse(m.data).worker || "Field"} → Gemini Vision reading handwriting…`; $("#toast").classList.add("on"); setHow(2); });
+es.addEventListener("found", (m) => { const f = JSON.parse(m.data); const d = document.createElement("span"); d.className = "chip"; d.innerHTML = `✓ ${pii(f.name)} <em>${esc(f.village)}</em>`; $("#toastFound").append(d); });
+es.addEventListener("entries", (m) => {
+  const { added, source } = JSON.parse(m.data);
+  if (scanStart) lats.push(Date.now() - scanStart); scanStart = 0;
+  entries = [...added, ...entries];
+  $("#toast").classList.remove("on");
+  all(new Set(added.map((e) => e.id)));
+});
+es.addEventListener("update", (m) => { const e = JSON.parse(m.data); entries = entries.map((x) => (x.id === e.id ? e : x)); all(); if (current?.id === e.id) openRecord(e); });
+es.addEventListener("alert", (m) => { alerts.unshift(JSON.parse(m.data)); all(); });
+es.addEventListener("ack", (m) => { const a = JSON.parse(m.data); alerts = alerts.map((x) => (x.id === a.id ? a : x)); all(); });
+es.addEventListener("reset", () => location.reload());
+es.onerror = () => ($("#mode").textContent = "reconnecting…");
+
+// ---- record modal: verify against paper, then bridge back ----
+let current;
+$("#rows").addEventListener("click", (ev) => {
+  const r = ev.target.closest(".row"); if (!r) return;
+  openRecord(entries.find((e) => e.id === r.dataset.id));
+  $("#modal").classList.add("on");
+});
+
+function openRecord(e) {
+  current = e;
+  current.hi = (HI_ACTION[e.category] || HI_ACTION.other)(e);
+  $("#mName").innerHTML = `${pii(e.name)} · ${esc(e.village)} <span class="pill ${e.risk}" style="vertical-align:middle">${e.risk}</span>`;
+  $("#mWhy").innerHTML = esc(e.reason) + ((e.evidence || []).length ? `<div class="ev-tags">AI saw on paper: ${e.evidence.map((v) => `<span>${esc(v.text)}</span>`).join("")}</div>` : "") + (e.answered ? `<div class="reply">🎙 ASHA answered: “${esc(e.answered)}”</div>` : "");
+  $("#mTags").innerHTML = badges(e) + (e.syndrome ? `<span class="tag">Govt category: ${esc(e.syndrome)}</span>` : "");
+  const past = entries.filter((p) => p.id !== e.id && p.name.toLowerCase() === e.name.toLowerCase() && p.village === e.village);
+  $("#mHist").innerHTML = past.length ? `<b style="color:var(--text)">Earlier visits</b>` + past.map((p) => `<div>${new Date(p.at).toLocaleString()} · <span class="${p.risk}">${p.risk}</span> · ${esc(p.note)}</div>`).join("") : "";
+  $("#mWho").textContent = `${e.worker} · ${new Date(e.at).toLocaleTimeString()}`;
+  const pct = Math.round((e.confidence ?? 1) * 100);
+  $("#mConf").innerHTML = `<span class="track"><i style="width:${pct}%" class="${pct < 75 ? "lo" : ""}"></i></span>AI is ${pct}% sure`;
+  $("#fName").value = e.name; $("#fAge").value = e.age ?? ""; $("#fVillage").value = e.village; $("#fNote").value = e.note; $("#fRisk").value = e.risk;
+  $("#mEdit").classList.toggle("locked", !!e.verified && !!e.verifiedAt);
+  $("#mVerify").textContent = e.verifiedAt ? "✓ Checked" : "✓ Looks right, confirm";
+  $("#mVerify").disabled = !!e.verifiedAt;
+  $("#mSlip").textContent = current.hi;
+  $("#mSms").href = "sms:?body=" + encodeURIComponent(`Kaagaz: ${current.hi}`);
+  drawCrop(e);
+}
+
+$("#mVerify").onclick = async () => {
+  const patch = {};
+  const v = { name: $("#fName").value.trim(), age: $("#fAge").value.trim(), village: $("#fVillage").value.trim(), note: $("#fNote").value.trim(), risk: $("#fRisk").value };
+  Object.entries(v).forEach(([k, val]) => { if (String(current[k] ?? "") !== val) patch[k] = val; });
+  await post("/api/verify", { id: current.id, patch });
+};
+
+// Crop the exact handwritten line from the original photo, so the doctor can verify the AI against the paper.
+function drawCrop(e) {
+  const cv = $("#mCrop"), ctx = cv.getContext("2d");
+  if (!e.src || !Array.isArray(e.box)) { cv.style.display = "none"; return; }
+  cv.style.display = "block";
+  const im = new Image();
+  im.onload = () => {
+    const W = im.naturalWidth || 800, H = im.naturalHeight || 1000, [y1, x1, y2, x2] = e.box, pad = 0.02;
+    const sx = Math.max(0, (x1 / 1000 - pad) * W), sy = Math.max(0, (y1 / 1000 - pad) * H);
+    const sw = Math.min(W - sx, ((x2 - x1) / 1000 + 2 * pad) * W), sh = Math.min(H - sy, ((y2 - y1) / 1000 + 2 * pad) * H);
+    cv.width = 1000; cv.height = Math.round(1000 * sh / sw);
+    ctx.drawImage(im, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
+    const k = cv.width / sw;
+    (e.evidence || []).forEach((v) => { if (!Array.isArray(v.box)) return; const [a, b, c, d] = v.box;
+      const x = ((b / 1000) * W - sx) * k, y = ((a / 1000) * H - sy) * k, w = ((d - b) / 1000) * W * k, h = ((c - a) / 1000) * H * k;
+      ctx.save(); ctx.shadowColor = "rgba(255,90,60,.8)"; ctx.shadowBlur = 18; ctx.fillStyle = "rgba(255,90,60,.28)"; ctx.strokeStyle = "#c8321e"; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.roundRect(x, y, w, h, 8); ctx.fill(); ctx.stroke(); ctx.restore(); });
+  };
+  im.src = e.src;
+}
+function speak(t) { const u = new SpeechSynthesisUtterance(t); u.lang = "hi-IN"; u.rate = .95; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+$("#mSpeak").onclick = () => speak(current.hi);
+$("#mClose").onclick = () => $("#modal").classList.remove("on");
+$("#modal").onclick = (e) => e.target.id === "modal" && $("#modal").classList.remove("on");
+addEventListener("keydown", (e) => e.key === "Escape" && $("#modal").classList.remove("on"));
+$("#mPrint").onclick = () => { const w = open("", "_blank"); w.document.write(`<body style="font:20px 'Noto Sans Devanagari',sans-serif;padding:40px"><h2>Kaagaz · ${esc(current.village)}</h2><p>${esc(current.hi)}</p><small>${esc(current.reason)}</small></body>`); w.print(); };
+$("#mSend").onclick = async () => {
+  await post("/api/alert", { name: current.name, village: current.village, worker: current.worker, hi: current.hi, risk: current.risk, entryId: current.id, ink: `${INK[current.category] || INK.other} — डॉ.` });
+  $("#modal").classList.remove("on");
+};
+$("#reset").onclick = () => confirm("Clear all demo data?") && fetch("/api/reset", { method: "POST" });
+$("#fieldUrl").textContent = location.origin + "/field.html";
+setInterval(() => ($("#clock").textContent = new Date().toLocaleTimeString()), 1000);
+renderMap();
+</script>
+</body>
+</html>

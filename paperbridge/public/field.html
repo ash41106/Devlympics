@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#05060d" />
+<title>Kaagaz Field</title>
+<link rel="icon" href="logo.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="motion.css" />
+<link rel="stylesheet" href="site.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="nav.js"></script>
+</head>
+<body>
+<div class="aurora"></div><div class="grid-bg"></div>
+<main class="field">
+  <div class="brand"><img class="logo" src="logo.svg" alt="" /> Kaagaz
+    <span class="net" id="net"><span class="dot"></span> <span id="netTxt">online</span></span></div>
+
+  <input class="txt" id="worker" value="ASHA Meena · Sonpur" aria-label="Worker name" />
+
+  <label class="cam glass" id="cam">
+    <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+    <div class="scanline"></div>
+    <div class="hint" id="hint"><b>📷 Tap to snap register page</b>Hindi, English or mixed handwriting</div>
+    <input type="file" accept="image/*" capture="environment" id="file" hidden />
+  </label>
+
+  <button class="btn primary big" id="send" disabled>📤 Send to doctor</button>
+  <div class="split">
+    <button class="btn big" id="demo">Try sample page 1</button>
+    <label class="switch"><input type="checkbox" id="offline" /><span></span> No signal</label>
+  </div>
+  <div class="split">
+    <button class="btn big" id="voice">🎙 बोलकर लिखें</button>
+    <button class="btn big" id="summary">🔊 आज का सारांश</button>
+  </div>
+  <label class="switch basic-sw"><input type="checkbox" id="basic" /><span></span> 📟 Basic phone mode (SMS only)</label>
+
+  <section class="glass panel" id="voiceBox" style="display:none">
+    <div class="panel-h"><div class="label">🎙 Speak the visit, Kaagaz writes it</div></div>
+    <div class="hi voice-live" id="voiceLive">बोलिए… जैसे: “सुनीता देवी, रामपुर, 7 महीने गर्भ, पैरों में सूजन”</div>
+    <div class="actions"><button class="btn primary" id="voiceSend" disabled>📤 Send</button><button class="btn" id="voiceDemo">Use example</button></div>
+  </section>
+
+  <section class="glass panel queue" id="queueBox" style="display:none">
+    <div class="panel-h"><div class="label">📦 Saved on phone · will send when signal returns</div><div class="label" id="qCount"></div></div>
+    <div id="queue"></div>
+  </section>
+
+  <section class="glass panel" id="pipe" style="display:none">
+    <div class="panel-h"><div class="label">Sending your page</div><div class="label" id="timer">0.0s</div></div>
+    <ol class="steps">
+      <li id="s1"><i></i><div><b>Page captured</b><span id="s1d">compressed on-device for 2G/3G</span></div></li>
+      <li id="s2"><i></i><div><b>Reading handwriting</b><span>Gemini Vision · Hindi + English</span><div class="found" id="found"></div></div></li>
+      <li id="s3"><i></i><div><b>Clinical triage</b><span id="s3d">checking danger signs</span></div></li>
+      <li id="s4"><i></i><div><b>Doctor can see it</b><span id="s4d">on the district screen</span></div></li>
+    </ol>
+  </section>
+
+  <section class="glass panel" id="paperBox" style="display:none">
+    <div class="panel-h"><div class="label">Your page, understood</div><div class="label" id="src"></div></div>
+    <div class="paper" id="paper"></div>
+    <div class="stamp" id="stamp"><div id="qr"></div><div><b>Page stamp</b><span>Print and stick on the register. Scan it any time to open this page's digital record.</span><a class="btn" id="stampLink" target="_blank">Open record ↗</a></div></div>
+    <div class="legend"><span class="high">■ high</span><span class="medium">■ medium</span><span class="low">■ low</span><span class="dim">dashed = doctor will double-check</span></div>
+  </section>
+
+
+  <section class="glass panel askbox" id="askBox" style="display:none">
+    <div class="panel-h"><div class="label">🙋‍♀️ Kaagaz needs one more detail</div></div>
+    <div id="asks"></div>
+  </section>
+
+  <section class="glass panel inbox">
+    <div class="panel-h"><div class="label">Messages from the doctor</div></div>
+    <div class="alerts" id="inbox"><div class="empty" style="padding:20px">Actions from the doctor will arrive here as voice notes.</div></div>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const post = (u, b) => fetch(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+let img = null, preview = null, demoPage = 1, myScan = null, t0 = 0, tick, busy = false;
+
+// ---------- capture ----------
+function setPreview(srcUrl) {
+  preview = srcUrl;
+  $("#cam").querySelector("img")?.remove();
+  const el = new Image(); el.src = srcUrl; $("#cam").prepend(el);
+  $("#hint").style.display = "none";
+}
+$("#file").onchange = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  img = await shrink(f);
+  setPreview("data:image/jpeg;base64," + img);
+  $("#send").disabled = false;
+};
+// Downscale on-device: faster upload on 2G/3G, lower Gemini latency, fits in the offline queue.
+function shrink(file, max = 1600) {
+  return new Promise((ok) => {
+    const i = new Image(); i.onload = () => {
+      const s = Math.min(1, max / Math.max(i.width, i.height)); const c = document.createElement("canvas");
+      c.width = i.width * s; c.height = i.height * s; c.getContext("2d").drawImage(i, 0, 0, c.width, c.height);
+      ok(c.toDataURL("image/jpeg", .8).split(",")[1]);
+    }; i.src = URL.createObjectURL(file);
+  });
+}
+
+// ---------- offline-first queue (inspired by SAMASTA / Khushi Baby offline mode) ----------
+const QKEY = "pb-queue";
+const loadQ = () => { try { return JSON.parse(localStorage.getItem(QKEY)) || []; } catch { return []; } };
+const saveQ = (q) => { try { localStorage.setItem(QKEY, JSON.stringify(q)); } catch { alert("Phone storage full: send queued pages first"); } };
+const isOffline = () => $("#offline").checked || !navigator.onLine;
+
+function renderNet() {
+  const off = isOffline(), q = loadQ();
+  $("#net").classList.toggle("off", off);
+  $("#netTxt").textContent = off ? "no signal" : "online";
+  $("#queueBox").style.display = q.length ? "block" : "none";
+  $("#qCount").textContent = q.length ? `${q.length} page${q.length > 1 ? "s" : ""}` : "";
+  $("#queue").innerHTML = q.map((j) => `<div class="qitem">📄 ${j.demoPage ? "Sample page " + j.demoPage : "Register photo"} <span class="label">${new Date(j.at).toLocaleTimeString()}</span></div>`).join("");
+}
+
+async function flushQueue() {
+  if (busy || isOffline()) return;
+  let q = loadQ();
+  while (q.length && !isOffline()) {
+    const job = q[0];
+    if (job.preview) setPreview(job.preview);
+    const ok = await bridge(job, true);
+    if (!ok) break;
+    q = loadQ().slice(1); saveQ(q); renderNet();
+  }
+}
+addEventListener("online", () => { renderNet(); flushQueue(); });
+addEventListener("offline", renderNet);
+$("#offline").onchange = () => { renderNet(); flushQueue(); };
+
+function submit(job) {
+  if (isOffline()) {
+    const q = loadQ(); q.push({ ...job, at: Date.now() }); saveQ(q); renderNet();
+    navigator.vibrate?.(40);
+    return;
+  }
+  bridge(job);
+}
+
+// ---------- live bridging pipeline ----------
+const step = (n, st) => ($("#s" + n).className = st);
+async function bridge(job, fromQueue) {
+  busy = true;
+  myScan = job.scanId;
+  $("#cam").classList.add("busy"); $("#send").disabled = $("#demo").disabled = true;
+  $("#pipe").style.display = "block"; $("#paperBox").style.display = "none"; $("#found").innerHTML = "";
+  step(1, "done"); step(2, "active"); step(3, ""); step(4, "");
+  $("#s1d").textContent = (fromQueue ? "synced from offline queue · " : "") + (job.demoPage ? `sample page ${job.demoPage}` : `${Math.round(job.image.length * .75 / 1024)} KB compressed on-device`);
+  t0 = performance.now(); clearInterval(tick);
+  tick = setInterval(() => ($("#timer").textContent = ((performance.now() - t0) / 1000).toFixed(1) + "s"), 100);
+  $("#pipe").scrollIntoView({ behavior: "smooth", block: "start" });
+  let r;
+  try {
+    r = await post("/api/extract", { image: job.image, mime: "image/jpeg", worker: $("#worker").value, demoPage: job.demoPage, scanId: job.scanId });
+  } catch {
+    clearInterval(tick); step(2, ""); $("#cam").classList.remove("busy"); busy = false;
+    $("#send").disabled = !img; $("#demo").disabled = false;
+    if (!fromQueue) { const q = loadQ(); q.push({ ...job, at: Date.now() }); saveQ(q); }
+    renderNet(); return false;
+  }
+  step(2, "done"); step(3, "active");
+  const hi = r.added.filter((e) => e.risk === "high").length, chk = r.added.filter((e) => !e.verified).length;
+  const worse = r.added.filter((e) => e.escalated).length;
+  $("#s3d").innerHTML = `<b class="high">${hi} high-risk</b> of ${r.added.length}` + (worse ? ` · <b class="high">${worse} worse since last visit</b>` : "") + (chk ? ` · ${chk} sent for doctor check` : "");
+  await new Promise((ok) => setTimeout(ok, 450));
+  step(3, "done"); step(4, "done"); clearInterval(tick);
+  $("#s4d").textContent = `${((performance.now() - t0) / 1000).toFixed(1)}s paper→cloud · was ~21 days`;
+  $("#cam").classList.remove("busy"); $("#send").disabled = !img; $("#demo").disabled = false;
+  showPaper(r);
+  navigator.vibrate?.(60);
+  busy = false;
+  return true;
+}
+
+// Overlay every row's bounding box on the original photo, coloured by risk; dashed = low AI confidence.
+function showPaper(r) {
+  $("#src").textContent = r.source;
+  $("#paper").innerHTML = `<img src="${esc(r.added[0]?.src || preview)}" alt="Register page" />` +
+    r.added.filter((e) => Array.isArray(e.box)).map((e, i) => {
+      const [y1, x1, y2, x2] = e.box;
+      return `<div class="box ${e.risk} ${e.verified ? "" : "unsure"}" style="top:${y1 / 10}%;left:${x1 / 10}%;width:${(x2 - x1) / 10}%;height:${(y2 - y1) / 10}%;animation-delay:${i * 120}ms"><span>${esc(e.name)} · ${e.risk}${e.visit > 1 ? " · visit " + e.visit : ""}</span></div>` + xray(e, i);
+    }).join("") + `<svg class="ink" id="ink" viewBox="0 0 800 1000" preserveAspectRatio="none"></svg>`;
+  $("#paperBox").style.display = "block";
+  r.added.forEach((e) => (mine[e.id] = e));
+  showAsks(r.added.filter((e) => e.ask));
+  stamp(r.added[0]?.scanId);
+}
+
+// QR page stamp: a sticker on the paper links back to its digital twin.
+function stamp(id) {
+  if (!id) return;
+  const url = `${location.origin}/page.html?scan=${encodeURIComponent(id)}`;
+  $("#qr").innerHTML = ""; $("#stampLink").href = url;
+  if (window.QRCode) new QRCode($("#qr"), { text: url, width: 96, height: 96, colorDark: "#1b1a2e", colorLight: "#fffaf0" });
+  else $("#qr").textContent = "QR";
+}
+
+// ---------- speak instead of write ----------
+let spoken = "";
+$("#voice").onclick = () => {
+  $("#voiceBox").style.display = "block"; $("#voiceBox").scrollIntoView({ behavior: "smooth", block: "center" });
+  if (!SR) { $("#voiceLive").textContent = "Voice not supported here: tap “Use example”"; return; }
+  const rec = new SR(); rec.lang = "hi-IN"; rec.interimResults = true; rec.continuous = true;
+  $("#voice").classList.add("rec"); $("#voice").textContent = "🔴 सुन रहा है… (tap to stop)";
+  rec.onresult = (e) => { spoken = [...e.results].map((r) => r[0].transcript).join(" "); $("#voiceLive").textContent = spoken; $("#voiceSend").disabled = !spoken.trim(); };
+  rec.onend = () => { $("#voice").classList.remove("rec"); $("#voice").textContent = "🎙 बोलकर लिखें"; $("#voice").onclick = startVoice; };
+  $("#voice").onclick = () => rec.stop();
+  rec.start();
+};
+const startVoice = $("#voice").onclick;
+$("#voiceDemo").onclick = () => { spoken = "मोहन लाल, 60 साल, सोनपुर गाँव से, 5 दिन से तेज़ बुखार, उल्टी भी हो रही है"; $("#voiceLive").textContent = spoken; $("#voiceSend").disabled = false; };
+$("#voiceSend").onclick = async () => {
+  $("#voiceSend").disabled = true;
+  const r = await post("/api/voice", { text: spoken, worker: $("#worker").value });
+  r.added.forEach((e) => (mine[e.id] = e));
+  $("#voiceLive").innerHTML = r.added.map((e) => `✓ ${esc(e.name)} · ${esc(e.village)} <span class="pill ${e.risk}">${e.risk}</span>`).join("<br>") + `<div class="label" style="margin-top:6px">sent to doctor · 0 typing</div>`;
+  showAsks(r.added.filter((e) => e.ask)); spoken = "";
+  navigator.vibrate?.(60);
+};
+
+// ---------- end-of-shift summary, spoken ----------
+$("#summary").onclick = () => {
+  const list = Object.values(mine), hi = list.filter((e) => e.risk === "high");
+  const msgs = [...document.querySelectorAll("#inbox .alert")].length;
+  const t = list.length
+    ? `आज आपने ${list.length} मरीज़ दर्ज किए। ${hi.length} ज़रूरी हैं${hi.length ? ": " + hi.map((e) => e.name).join(", ") : ""}। डॉक्टर के ${msgs} संदेश आए। ${hi.length ? "ज़रूरी मरीज़ों से आज ही मिलें।" : "बहुत बढ़िया काम!"}`
+    : "आज अभी कोई मरीज़ दर्ज नहीं हुआ। रजिस्टर की फ़ोटो भेजें या बोलकर लिखें।";
+  speak(t);
+  $("#voiceBox").style.display = "block"; $("#voiceLive").textContent = "🔊 " + t;
+};
+
+// Danger-sign X-ray: the exact handwritten words that triggered the risk glow on the photo.
+function xray(e, i) {
+  return (e.evidence || []).filter((v) => Array.isArray(v.box)).map((v, j) => { const [y1, x1, y2, x2] = v.box;
+    return `<i class="ev ${e.risk}" title="${esc(v.text)}" style="top:${y1 / 10}%;left:${x1 / 10}%;width:${(x2 - x1) / 10}%;height:${(y2 - y1) / 10}%;animation-delay:${900 + i * 250 + j * 180}ms"></i>`; }).join("");
+}
+
+// AI asks back: one spoken Hindi question when a missing detail would change triage.
+function showAsks(list) {
+  if (!list.length) return;
+  $("#askBox").style.display = "block";
+  list.forEach((e) => {
+    const d = document.createElement("div"); d.className = "ask-q";
+    d.innerHTML = `<div class="who">${esc(e.name)} · ${esc(e.village)}</div><div class="hi">${esc(e.ask)}</div>
+      <div class="actions"><button class="btn" data-v="हाँ, उल्टी हो रही है">हाँ</button><button class="btn" data-v="नहीं">नहीं</button><button class="btn primary" data-mic>🎙 बोलें</button><button class="btn" data-play>🔊</button></div><div class="reply" hidden></div>`;
+    const done = (v) => { post("/api/answer", { id: e.id, answer: v }); d.querySelector(".actions").remove(); const r = d.querySelector(".reply"); r.hidden = false; r.textContent = `🎙 “${v}” · sent ✓`; };
+    d.onclick = (ev) => {
+      const b = ev.target.closest("button"); if (!b) return;
+      if (b.dataset.v) done(b.dataset.v);
+      if (b.hasAttribute("data-play")) speak(e.ask);
+      if (b.hasAttribute("data-mic")) {
+        if (!SR) { b.textContent = "tap हाँ / नहीं"; return; }
+        const rec = new SR(); rec.lang = "hi-IN"; let t = ""; b.textContent = "🔴 सुन रहा है…";
+        rec.onresult = (x) => (t = [...x.results].map((r) => r[0].transcript).join(" "));
+        rec.onend = () => (t.trim() ? done(t.trim()) : (b.textContent = "🎙 बोलें")); rec.start();
+      }
+    };
+    $("#asks").append(d);
+  });
+  setTimeout(() => speak(list[0].ask), 1800);
+}
+
+// Ink Replay: the doctor's reply is written by hand into the margin of the worker's own page.
+function inkReply(a) {
+  const e = mine[a.entryId], svg = $("#ink");
+  if (!e || !svg || !Array.isArray(e.box)) return;
+  const [y1, , y2] = e.box, y = (y1 + y2) / 2;
+  const text = a.ink || "✓ आज ही PHC — डॉ.";
+  svg.insertAdjacentHTML("beforeend", `<g class="inkline">
+    <path d="M 470 ${y - 2} q 40 -42 80 -14" />
+    <text x="540" y="${y - 30}" font-size="30" transform="rotate(-4 540 ${y})">${esc(text)}</text></g>`);
+  $("#paperBox").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+const mine = {};
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+$("#send").onclick = () => submit({ scanId: newId(), image: img, preview });
+$("#demo").onclick = () => {
+  const p = demoPage; setPreview(`/sample${p}.svg`); img = null;
+  demoPage = p === 1 ? 2 : 1; $("#demo").textContent = `Try sample page ${demoPage}`;
+  submit({ scanId: newId(), demoPage: p, preview: `/sample${p}.svg` });
+};
+
+// ---------- inbox: voice note in, voice reply out (closing the loop) ----------
+function speak(t, onend) { const u = new SpeechSynthesisUtterance(t); u.lang = "hi-IN"; u.rate = .95; if (onend) u.onend = onend; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+const ack = (id, status, reply) => post("/api/ack", { id, status, reply }).catch(() => {});
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// Basic phone mode: no data, no app. The instruction arrives as an SMS; the worker replies with one key.
+const KEYS = { 1: "हाँ, अभी जा रही हूँ", 2: "मरीज़ नहीं मिला, कल फिर जाऊँगी", 3: "मदद चाहिए, एम्बुलेंस भेजें" };
+function addSms(a) {
+  const d = document.createElement("div"); d.className = "sms";
+  d.innerHTML = `<div class="sms-h">📩 SMS · ${esc(a.code || "KGZ")} · 2G</div>
+    <div class="sms-b">${esc(a.code || "KGZ")}: ${esc(a.hi)}<br/><br/>जवाब: 1 = जा रही हूँ · 2 = नहीं मिला · 3 = मदद</div>
+    <div class="keypad">${[1, 2, 3].map((k) => `<button class="btn" data-k="${k}">${k}</button>`).join("")}</div><div class="reply" hidden></div>`;
+  d.onclick = (ev) => { const b = ev.target.closest("[data-k]"); if (!b) return;
+    ack(a.id, "acknowledged", `[SMS ${b.dataset.k}] ${KEYS[b.dataset.k]}`);
+    d.querySelector(".keypad").remove(); const r = d.querySelector(".reply"); r.hidden = false; r.textContent = `↩ SMS sent: “${b.dataset.k}” · ${KEYS[b.dataset.k]}`; };
+  $("#inbox").prepend(d); navigator.vibrate?.([300]);
+  ack(a.id, "heard");
+}
+function addAlert(a) {
+  if ($("#inbox .empty")) $("#inbox").innerHTML = "";
+  if ($("#basic").checked) { addSms(a); inkReply(a); return; }
+  const d = document.createElement("div"); d.className = "alert" + (a.kind === "outbreak" ? " outbreak" : ""); d.dataset.id = a.id;
+  d.innerHTML = `<b>${a.kind === "outbreak" ? "🚨 Block Medical Officer" : "🩺 District doctor"}</b> · ${esc(a.name)} <span class="pill ${a.risk}" style="float:right">${a.risk}</span>
+    <div class="hi">${esc(a.hi)}</div>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn" data-a="play">🔊 सुनें</button>
+      <button class="btn primary" data-a="mic">🎙 बोलकर जवाब दें</button>
+    </div>
+    <div class="quick"><button class="btn" data-q="हाँ, अभी जा रही हूँ">✓ जा रही हूँ</button><button class="btn" data-q="मरीज़ नहीं मिला, कल फिर जाऊँगी">✗ नहीं मिला</button><button class="btn" data-q="मदद चाहिए, एम्बुलेंस भेजें">🆘 मदद चाहिए</button></div>
+    <div class="reply" hidden></div>`;
+  const done = (text) => {
+    ack(a.id, "acknowledged", text);
+    d.querySelector(".reply").hidden = false; d.querySelector(".reply").textContent = `🎙 “${text}” · sent ✓`;
+    d.querySelector(".quick").remove(); d.querySelector('[data-a="mic"]').remove();
+  };
+  d.onclick = (ev) => {
+    const b = ev.target.closest("button"); if (!b) return;
+    if (b.dataset.a === "play") speak(a.hi, () => ack(a.id, "heard"));
+    if (b.dataset.q) done(b.dataset.q);
+    if (b.dataset.a === "mic") {
+      if (!SR) { b.textContent = "🎙 not supported, tap a reply"; return; }
+      const rec = new SR(); rec.lang = "hi-IN"; rec.interimResults = true;
+      b.textContent = "🔴 सुन रहा है…"; b.classList.add("rec");
+      let text = "";
+      rec.onresult = (e) => { text = [...e.results].map((r) => r[0].transcript).join(" "); d.querySelector(".reply").hidden = false; d.querySelector(".reply").textContent = "🎙 " + text; };
+      rec.onend = () => { b.classList.remove("rec"); b.textContent = "🎙 बोलकर जवाब दें"; if (text.trim()) done(text.trim()); };
+      rec.onerror = () => (b.textContent = "🎙 try again");
+      rec.start();
+    }
+  };
+  $("#inbox").prepend(d);
+  inkReply(a);
+  navigator.vibrate?.([200, 100, 200]);
+  speak(a.hi, () => ack(a.id, "heard"));
+}
+
+
+const es = new EventSource("/api/stream");
+es.addEventListener("found", (m) => {
+  const f = JSON.parse(m.data); if (f.scanId !== myScan) return;
+  const d = document.createElement("div"); d.className = "chip"; d.innerHTML = `✓ ${esc(f.name)} <em>${esc(f.village)}</em>`;
+  $("#found").append(d);
+});
+es.addEventListener("alert", (m) => addAlert(JSON.parse(m.data)));
+es.addEventListener("reset", () => { try { localStorage.removeItem(QKEY); } catch {} location.reload(); });
+es.onopen = () => { renderNet(); flushQueue(); };
+renderNet();
+</script>
+</body>
+</html>
